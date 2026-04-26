@@ -1,0 +1,21 @@
+Japanese Memory Game
+
+Copyright (C) 2026 Zero Softworks
+
+Licensing summary:
+
+- Source code: GNU General Public License v3.0 or later.
+- Original educational content created for this project: Creative Commons Attribution 4.0 International.
+- Kanji grade data derived from Wikipedia: Creative Commons Attribution-ShareAlike 4.0 International.
+- Trademarks, trade names, logos, mascots, visual identity, and brand assets: all rights reserved.
+
+Wikipedia attribution:
+
+This project includes adapted kanji grade data derived from Wikipedia contributors, "Kyōiku kanji", Wikipedia, The Free Encyclopedia.
+
+Source: https://en.wikipedia.org/wiki/Ky%C5%8Diku_kanji
+Permanent revision referenced during project setup: https://en.wikipedia.org/w/index.php?title=Ky%C5%8Diku_kanji&oldid=1325814426
+License: Creative Commons Attribution-ShareAlike 4.0 International
+License URL: https://creativecommons.org/licenses/by-sa/4.0/
+
+The Wikipedia-derived data has been adapted into a JavaScript data structure for use in this game.
