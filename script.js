@@ -651,6 +651,8 @@ function setSiteMenuOpen(open) {
 }
 
 function showSocialComingSoon(event) {
+    event.preventDefault();
+    event.stopPropagation();
     const feedback = document.querySelector('#social-feedback');
     const name = event.currentTarget.dataset.social || 'Social';
     if (feedback) feedback.textContent = `${name} coming soon.`;
@@ -1129,8 +1131,10 @@ initGame();
 
 window.addEventListener('scroll', () => {
     const betaBadge = document.querySelector('.beta-badge');
-    if (!betaBadge) return;
-    betaBadge.classList.toggle('hidden', window.scrollY > 24);
+    const timeCounter = document.querySelector('#play-time-counter');
+    const scrolled = window.scrollY > 24;
+    if (betaBadge) betaBadge.classList.toggle('hidden', scrolled);
+    if (timeCounter) timeCounter.classList.toggle('raised', scrolled);
 }, { passive: true });
 
 document.querySelector('#controls-toggle').addEventListener('click', () => {
@@ -1249,7 +1253,8 @@ document.querySelector('#access-wall-close')?.addEventListener('click', hideAcce
 document.querySelector('#access-wall')?.addEventListener('click', event => {
     if (event.target === event.currentTarget) hideAccessWall();
 });
-document.querySelectorAll('.social-links button').forEach(button => {
+document.querySelectorAll('.social-links button[data-coming-soon="true"]').forEach(button => {
+    button.addEventListener('pointerdown', showSocialComingSoon);
     button.addEventListener('click', showSocialComingSoon);
 });
 document.addEventListener('pointerdown', event => {
