@@ -1,0 +1,9 @@
+.env
+.env.*
+.env.operator
+.env.operator.example
+.env.local.example
+node_modules
+.next
+.git
+*.log

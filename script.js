@@ -339,8 +339,220 @@ function shuffleArray(array) {
     return array;
 }
 
+const kanaToRomajiMap = {
+    きゃ: 'kya', きゅ: 'kyu', きょ: 'kyo', ぎゃ: 'gya', ぎゅ: 'gyu', ぎょ: 'gyo',
+    しゃ: 'sha', しゅ: 'shu', しょ: 'sho', じゃ: 'ja', じゅ: 'ju', じょ: 'jo',
+    ちゃ: 'cha', ちゅ: 'chu', ちょ: 'cho', ぢゃ: 'ja', ぢゅ: 'ju', ぢょ: 'jo',
+    にゃ: 'nya', にゅ: 'nyu', にょ: 'nyo', ひゃ: 'hya', ひゅ: 'hyu', ひょ: 'hyo',
+    びゃ: 'bya', びゅ: 'byu', びょ: 'byo', ぴゃ: 'pya', ぴゅ: 'pyu', ぴょ: 'pyo',
+    みゃ: 'mya', みゅ: 'myu', みょ: 'myo', りゃ: 'rya', りゅ: 'ryu', りょ: 'ryo',
+    あ: 'a', い: 'i', う: 'u', え: 'e', お: 'o', か: 'ka', き: 'ki', く: 'ku', け: 'ke', こ: 'ko',
+    が: 'ga', ぎ: 'gi', ぐ: 'gu', げ: 'ge', ご: 'go', さ: 'sa', し: 'shi', す: 'su', せ: 'se', そ: 'so',
+    ざ: 'za', じ: 'ji', ず: 'zu', ぜ: 'ze', ぞ: 'zo', た: 'ta', ち: 'chi', つ: 'tsu', て: 'te', と: 'to',
+    だ: 'da', ぢ: 'ji', づ: 'zu', で: 'de', ど: 'do', な: 'na', に: 'ni', ぬ: 'nu', ね: 'ne', の: 'no',
+    は: 'ha', ひ: 'hi', ふ: 'fu', へ: 'he', ほ: 'ho', ば: 'ba', び: 'bi', ぶ: 'bu', べ: 'be', ぼ: 'bo',
+    ぱ: 'pa', ぴ: 'pi', ぷ: 'pu', ぺ: 'pe', ぽ: 'po', ま: 'ma', み: 'mi', む: 'mu', め: 'me', も: 'mo',
+    や: 'ya', ゆ: 'yu', よ: 'yo', ら: 'ra', り: 'ri', る: 'ru', れ: 're', ろ: 'ro', わ: 'wa', を: 'wo', ん: 'n'
+};
+
 let currentMode = 'hiragana';
 let currentGrade = 1;
+let currentSearch = '';
+let appMode = 'explore';
+let playKind = 'pronunciation';
+let playDeck = [];
+let score = 0;
+let answeredCards = new Set();
+let bonusSolved = false;
+let savedStats = loadSavedStats();
+let elapsedSeconds = 0;
+let timerStartedAt = null;
+let timerInterval = null;
+const anonymousFallbackUsage = { explore_card_used: 0, play_attempt: 0 };
+const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
+const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
+const advancedKanjiCache = new Map();
+
+function loadSavedStats() {
+    const fallback = { bestScore: 0, totalScore: 0, completedRounds: 0 };
+
+    try {
+        const saved = window.localStorage.getItem('jmg-score-stats');
+        return saved ? { ...fallback, ...JSON.parse(saved) } : fallback;
+    } catch (error) {
+        return fallback;
+    }
+}
+
+function saveStats() {
+    try {
+        window.localStorage.setItem('jmg-score-stats', JSON.stringify(savedStats));
+    } catch (error) {
+        // Score persistence is best-effort until account-based storage exists.
+    }
+}
+
+function formatTime(totalSeconds) {
+    const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+}
+
+function updateTimerDisplay() {
+    const timeValue = document.querySelector('#time-value');
+    if (timeValue) timeValue.textContent = formatTime(elapsedSeconds);
+}
+
+function stopPlayTimer() {
+    if (!timerInterval) return;
+    window.clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function startPlayTimer() {
+    stopPlayTimer();
+    timerStartedAt = Date.now();
+    timerInterval = window.setInterval(() => {
+        elapsedSeconds = Math.floor((Date.now() - timerStartedAt) / 1000);
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function resetPlayTimer() {
+    stopPlayTimer();
+    elapsedSeconds = 0;
+    timerStartedAt = null;
+    updateTimerDisplay();
+    if (appMode === 'play' && playDeck.length > 0) startPlayTimer();
+}
+
+async function requestUsage(kind) {
+    anonymousFallbackUsage[kind] += 1;
+
+    try {
+        const response = await fetch('/api/usage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ kind })
+        });
+
+        if (!response.ok) {
+            if (anonymousFallbackUsage[kind] > anonymousFallbackLimits[kind]) {
+                showAccessWall('auth');
+                return false;
+            }
+            return true;
+        }
+        const result = await response.json();
+        if (result.authRequired) {
+            showAccessWall('auth');
+            return false;
+        }
+        return result.allowed !== false;
+    } catch (error) {
+        if (anonymousFallbackUsage[kind] > anonymousFallbackLimits[kind]) {
+            showAccessWall('auth');
+            return false;
+        }
+        return true;
+    }
+}
+
+async function requestAdvancedAccess(feature, payload) {
+    try {
+        const response = await fetch('/api/access', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ feature, ...payload })
+        });
+
+        if (!response.ok) {
+            showAccessWall('auth');
+            return false;
+        }
+        const result = await response.json();
+        if (result.authRequired) {
+            showAccessWall('auth');
+            return false;
+        }
+        if (result.paymentRequired) {
+            showAccessWall('plus');
+            return false;
+        }
+        return result.allowed !== false;
+    } catch (error) {
+        showAccessWall('auth');
+        return false;
+    }
+}
+
+async function loadKanjiGrade(grade) {
+    if (grade <= 2 || advancedKanjiCache.has(grade)) return true;
+
+    const response = await fetch(`/api/kanji?grade=${encodeURIComponent(String(grade))}`);
+    if (response.status === 401) {
+        showAccessWall('auth');
+        return false;
+    }
+    if (response.status === 402) {
+        showAccessWall('plus');
+        return false;
+    }
+    if (!response.ok) return false;
+
+    const result = await response.json();
+    if (!Array.isArray(result.data)) return false;
+    advancedKanjiCache.set(grade, result.data);
+    return true;
+}
+
+function showAccessWall(kind) {
+    const wall = document.querySelector('#access-wall');
+    const label = document.querySelector('#access-wall-label');
+    const title = document.querySelector('#access-wall-title');
+    const copy = document.querySelector('#access-wall-copy');
+    const authActions = document.querySelector('#auth-actions');
+    const plusActions = document.querySelector('#plus-actions');
+    if (!wall || !label || !title || !copy || !authActions || !plusActions) return;
+
+    if (kind === 'plus') {
+        label.textContent = 'Japanese Memory Game Plus';
+        title.textContent = 'Unlock advanced learning';
+        copy.textContent = 'Grade 3 and future advanced content are included with Plus.';
+        authActions.hidden = true;
+        plusActions.hidden = false;
+    } else {
+        label.textContent = 'Keep learning';
+        title.textContent = 'Sign in to continue';
+        copy.textContent = 'Sign in if you already have an account, or create a free account to keep playing with no limits in Explore Mode.';
+        authActions.hidden = false;
+        plusActions.hidden = true;
+    }
+
+    wall.hidden = false;
+}
+
+function hideAccessWall() {
+    const wall = document.querySelector('#access-wall');
+    if (wall) wall.hidden = true;
+}
+
+async function startCheckout(interval) {
+    const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interval })
+    });
+
+    if (response.status === 401) {
+        showAccessWall('auth');
+        return;
+    }
+
+    if (!response.ok) return;
+    const result = await response.json();
+    if (result.url) window.location.href = result.url;
+}
 
 function updateCurrentYear() {
     const currentYear = document.querySelector('#current-year');
@@ -350,16 +562,241 @@ function updateCurrentYear() {
 }
 
 function getKanjiData() {
-    return Array.isArray(window.kanjiData) ? window.kanjiData : [];
+    const publicKanji = Array.isArray(window.kanjiData) ? window.kanjiData : [];
+    return [...publicKanji, ...advancedKanjiCache.values()].flat();
 }
 
 function formatReading(value) {
     return value || '-';
 }
 
+function toHiragana(value) {
+    return value.replace(/[ァ-ン]/g, char => String.fromCharCode(char.charCodeAt(0) - 0x60));
+}
+
+function normalizeSearch(value) {
+    return value
+        .toLowerCase()
+        .normalize('NFKC')
+        .replaceAll('ā', 'a')
+        .replaceAll('ī', 'i')
+        .replaceAll('ū', 'u')
+        .replaceAll('ē', 'e')
+        .replaceAll('ō', 'o')
+        .trim();
+}
+
+function normalizeAnswer(value) {
+    return normalizeSearch(toHiragana(String(value || ''))).replaceAll('-', '').replaceAll(' ', '');
+}
+
+function isHiraganaInput(value) {
+    return /^[ぁ-ゖー\s-]+$/.test(String(value || '').trim());
+}
+
+function simplifyLongVowels(value) {
+    return value
+        .replaceAll('ou', 'o')
+        .replaceAll('uu', 'u')
+        .replaceAll('aa', 'a')
+        .replaceAll('ii', 'i')
+        .replaceAll('ee', 'e');
+}
+
+function romanizeKana(value) {
+    const hiragana = toHiragana(value.replaceAll('ー', ''));
+    let output = '';
+
+    for (let i = 0; i < hiragana.length; i++) {
+        const current = hiragana[i];
+
+        if (current === '-' || current === '、' || current === ',' || current === ' ') {
+            output += current;
+            continue;
+        }
+
+        if (current === 'っ') {
+            const nextPair = hiragana.slice(i + 1, i + 3);
+            const nextSingle = hiragana[i + 1];
+            const nextRomaji = kanaToRomajiMap[nextPair] || kanaToRomajiMap[nextSingle] || '';
+            output += nextRomaji.charAt(0);
+            continue;
+        }
+
+        const pair = hiragana.slice(i, i + 2);
+        if (kanaToRomajiMap[pair]) {
+            output += kanaToRomajiMap[pair];
+            i += 1;
+            continue;
+        }
+
+        output += kanaToRomajiMap[current] || current;
+    }
+
+    return output;
+}
+
+function addToken(tokens, value) {
+    if (!value) return;
+    const normalized = normalizeSearch(String(value));
+    if (!normalized) return;
+    tokens.push(normalized, simplifyLongVowels(normalized));
+}
+
+function addReadingTokens(tokens, value) {
+    addToken(tokens, value);
+    String(value || '').split(/[、,\s]+/).forEach(reading => {
+        const romaji = romanizeKana(reading);
+        addToken(tokens, romaji);
+        addToken(tokens, simplifyLongVowels(romaji));
+    });
+}
+
+function getBrowseData() {
+    if (currentMode === 'hiragana') {
+        return hiraganaData.map(item => ({ type: 'hiragana', character: item.hiragana, romaji: item.romaji }));
+    }
+
+    if (currentMode === 'katakana') {
+        return katakanaData.map(item => ({ type: 'katakana', character: item.katakana, romaji: item.romaji }));
+    }
+
+    return getKanjiData().filter(k => k.grade === currentGrade).map(item => ({ ...item, type: 'kanji' }));
+}
+
+function getSearchData() {
+    const hiraganaCards = hiraganaData.map(item => ({ type: 'hiragana', character: item.hiragana, romaji: item.romaji }));
+    const katakanaCards = katakanaData.map(item => ({ type: 'katakana', character: item.katakana, romaji: item.romaji }));
+    const kanjiCards = getKanjiData().map(item => ({ ...item, type: 'kanji' }));
+
+    return [...hiraganaCards, ...katakanaCards, ...kanjiCards];
+}
+
+function getSearchTokens(data) {
+    const tokens = [];
+
+    if (data.type === 'kanji') {
+        addToken(tokens, data.kanji);
+        addToken(tokens, data.meaning);
+        addToken(tokens, `grade ${data.grade}`);
+        addReadingTokens(tokens, data.onyomi);
+        addReadingTokens(tokens, data.kunyomi);
+    } else {
+        addToken(tokens, data.character);
+        addToken(tokens, data.romaji);
+        addToken(tokens, romanizeKana(data.character));
+    }
+
+    return [...new Set(tokens)];
+}
+
+function matchesSearch(data, query) {
+    const normalizedQuery = normalizeSearch(query);
+    if (!normalizedQuery) return true;
+
+    return getSearchTokens(data).some(token => token.includes(normalizedQuery));
+}
+
+function getCardId(data) {
+    if (data.type === 'kanji') return `kanji-${data.grade}-${data.kanji}`;
+    return `${data.type}-${data.character}`;
+}
+
+function getAcceptedAnswers(data) {
+    if (data.type === 'kanji' && playKind === 'meaning') {
+        return String(data.meaning || '')
+            .split(/[,;\/]|\bor\b/)
+            .map(answer => normalizeAnswer(answer))
+            .filter(Boolean);
+    }
+
+    if (data.type === 'kanji') {
+        return `${data.onyomi || ''}、${data.kunyomi || ''}`
+            .split(/[、,\s]+/)
+            .map(answer => normalizeAnswer(answer))
+            .filter(Boolean);
+    }
+
+    return [normalizeAnswer(data.romaji)];
+}
+
+function closeActiveAnswerCards(exceptCard = null) {
+    document.querySelectorAll('.card.answering, .card.wrong').forEach(card => {
+        if (card === exceptCard || card.classList.contains('solved')) return;
+        const input = card.querySelector('.answer-panel input');
+        const feedback = card.querySelector('.answer-feedback');
+        if (input) input.value = '';
+        setCancelHint(feedback);
+        card.classList.remove('answering', 'wrong');
+    });
+}
+
+function hasActiveAnswerCard(exceptCard = null) {
+    return [...document.querySelectorAll('.card.answering, .card.wrong')]
+        .some(card => card !== exceptCard && !card.classList.contains('solved'));
+}
+
+function getCancelHintMarkup() {
+    return '<span class="desktop-cancel">Press Esc to cancel.</span><span class="mobile-cancel">Tap outside to cancel.</span>';
+}
+
+function setCancelHint(element) {
+    if (!element) return;
+    element.replaceChildren();
+    const desktopHint = document.createElement('span');
+    desktopHint.className = 'desktop-cancel';
+    desktopHint.textContent = 'Press Esc to cancel.';
+    const mobileHint = document.createElement('span');
+    mobileHint.className = 'mobile-cancel';
+    mobileHint.textContent = 'Tap outside to cancel.';
+    element.append(desktopHint, mobileHint);
+}
+
+function appendTextElement(parent, tagName, text, className = '') {
+    const element = document.createElement(tagName);
+    if (className) element.className = className;
+    element.textContent = text;
+    parent.appendChild(element);
+    return element;
+}
+
+function cancelAnswerCard(card) {
+    const input = card.querySelector('.answer-panel input');
+    const feedback = card.querySelector('.answer-feedback');
+    if (input) input.value = '';
+    setCancelHint(feedback);
+    card.classList.remove('answering', 'wrong');
+}
+
+function isCorrectAnswer(data, value) {
+    if (data.type === 'kanji' && playKind === 'pronunciation' && !isHiraganaInput(value)) return false;
+
+    const answer = normalizeAnswer(value);
+    if (!answer) return false;
+    return getAcceptedAnswers(data).includes(answer);
+}
+
+function getAnswerPlaceholder(data) {
+    if (data.type === 'kanji' && playKind === 'meaning') return 'Type the English meaning';
+    return data.type === 'kanji' ? 'Type hiragana only' : 'Type romaji';
+}
+
+function getAnswerHelp(data) {
+    if (data.type === 'kanji' && playKind === 'meaning') return 'What does this kanji mean?';
+    if (data.type === 'kanji') return 'Pronunciation: hiragana only.';
+    return playKind === 'meaning' ? 'Kana have no meaning here: use romaji.' : 'Pronunciation: romaji.';
+}
+
+function getRevealText(data) {
+    if (data.type === 'kanji' && playKind === 'meaning') return data.meaning;
+    if (data.type === 'kanji') return `${formatReading(data.onyomi)} / ${formatReading(data.kunyomi)}`;
+    return data.romaji;
+}
+
 function createCard(data) {
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = `card ${data.type || currentMode}`;
+    card.dataset.cardId = getCardId(data);
     
     const cardInner = document.createElement('div');
     cardInner.className = 'card-inner';
@@ -370,47 +807,199 @@ function createCard(data) {
     const cardBack = document.createElement('div');
     cardBack.className = 'card-back';
     
-    if (currentMode === 'kanji') {
-        cardFront.textContent = data.kanji;
-        cardBack.innerHTML = `Meaning: ${data.meaning}<br>Onyomi: ${formatReading(data.onyomi)}<br>Kunyomi: ${formatReading(data.kunyomi)}`;
+    const cardPrompt = document.createElement('span');
+    cardPrompt.className = 'card-prompt';
+
+    if (data.type === 'kanji') {
+        cardPrompt.textContent = data.kanji;
+        appendTextElement(cardBack, 'span', `Grade ${data.grade}`, 'card-label');
+        appendTextElement(cardBack, 'strong', data.meaning);
+        appendTextElement(cardBack, 'span', `Onyomi: ${formatReading(data.onyomi)}`);
+        appendTextElement(cardBack, 'span', `Kunyomi: ${formatReading(data.kunyomi)}`);
     } else {
-        cardFront.textContent = data.character;
-        cardBack.textContent = data.romaji;
+        cardPrompt.textContent = data.character;
+        appendTextElement(cardBack, 'span', data.type, 'card-label');
+        appendTextElement(cardBack, 'strong', data.romaji);
     }
+
+    cardFront.appendChild(cardPrompt);
     
     cardInner.appendChild(cardFront);
     cardInner.appendChild(cardBack);
     card.appendChild(cardInner);
     
-    card.addEventListener('click', () => {
-        card.classList.toggle('flipped');
-    });
+    if (appMode === 'play') {
+        addPlayControls(card, cardFront, data);
+    } else {
+        card.addEventListener('click', async () => {
+            if (!await requestUsage('explore_card_used')) return;
+            card.classList.toggle('flipped');
+        });
+    }
     
     return card;
 }
 
-function initGame() {
-    const cardsGrid = document.querySelector('.cards-grid');
-    cardsGrid.innerHTML = '';
-    
-    let data;
-    if (currentMode === 'hiragana') {
-        data = hiraganaData.map(item => ({ character: item.hiragana, romaji: item.romaji }));
-    } else if (currentMode === 'katakana') {
-        data = katakanaData.map(item => ({ character: item.katakana, romaji: item.romaji }));
-    } else if (currentMode === 'kanji') {
-        data = getKanjiData().filter(k => k.grade === currentGrade);
-        if (data.length === 0) {
-            console.error(`No kanji found for grade ${currentGrade}`);
+function addPlayControls(card, cardFront, data) {
+    const answerPanel = document.createElement('form');
+    answerPanel.className = 'answer-panel';
+
+    const label = document.createElement('label');
+    label.textContent = getAnswerHelp(data);
+    const answerRow = document.createElement('div');
+    answerRow.className = 'answer-row';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.autocomplete = 'off';
+    input.placeholder = getAnswerPlaceholder(data);
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.textContent = 'Check';
+    answerRow.append(input, submitButton);
+    const feedback = document.createElement('p');
+    feedback.className = 'answer-feedback';
+    setCancelHint(feedback);
+    answerPanel.append(label, answerRow, feedback);
+    cardFront.appendChild(answerPanel);
+
+    card.addEventListener('click', event => {
+        if (answeredCards.has(getCardId(data))) return;
+        if (event.target.closest('.answer-panel')) return;
+
+        if (hasActiveAnswerCard(card)) {
+            closeActiveAnswerCards(card);
             return;
         }
+
+        closeActiveAnswerCards(card);
+        card.classList.add('answering');
+        input.focus();
+    });
+
+    input.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        event.preventDefault();
+        cancelAnswerCard(card);
+    });
+
+    answerPanel.addEventListener('submit', event => {
+        event.preventDefault();
+
+        requestUsage('play_attempt').then(allowed => {
+            if (!allowed) return;
+
+            if (isCorrectAnswer(data, input.value)) {
+                const cardId = getCardId(data);
+                answeredCards.add(cardId);
+                score += 1;
+                savedStats.totalScore += 1;
+                savedStats.bestScore = Math.max(savedStats.bestScore, score);
+                saveStats();
+                card.classList.remove('answering', 'wrong');
+                card.classList.add('flipped', 'solved');
+                input.disabled = true;
+                answerPanel.querySelector('button').disabled = true;
+                feedback.textContent = `Correct: ${getRevealText(data)}`;
+                updateScorePanel();
+                checkRoundCompletion();
+                return;
+            }
+
+            card.classList.add('wrong');
+            feedback.textContent = 'Try again.';
+            input.select();
+            window.setTimeout(() => card.classList.remove('wrong'), 420);
+        });
+    });
+}
+
+function updateResultsSummary(count, isSearching) {
+    const summary = document.querySelector('#results-summary');
+    if (!summary) return;
+
+    if (isSearching) {
+        summary.textContent = count === 1 ? '1 matching card' : `${count} matching cards`;
+        return;
     }
-    
-    const shuffledData = shuffleArray([...data]);
-    shuffledData.forEach(item => {
+
+    if (currentMode === 'kanji') {
+        summary.textContent = `Browsing Grade ${currentGrade}: ${count} cards`;
+    } else {
+        summary.textContent = `Browsing ${currentMode}: ${count} cards`;
+    }
+}
+
+function renderCards(data, isSearching) {
+    const cardsGrid = document.querySelector('.cards-grid');
+    cardsGrid.innerHTML = '';
+
+    updateResultsSummary(data.length, isSearching);
+
+    if (data.length === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'empty-state';
+        emptyState.textContent = 'No cards found. Try Japanese, romaji, or an English meaning.';
+        cardsGrid.appendChild(emptyState);
+        return;
+    }
+
+    data.forEach(item => {
         const card = createCard(item);
         cardsGrid.appendChild(card);
     });
+}
+
+function updateScorePanel() {
+    const scorePanel = document.querySelector('#score-panel');
+    const timeCounter = document.querySelector('#play-time-counter');
+    const scoreValue = document.querySelector('#score-value');
+    const progressValue = document.querySelector('#progress-value');
+    const bestScoreValue = document.querySelector('#best-score-value');
+    const totalScoreValue = document.querySelector('#total-score-value');
+    const timeValue = document.querySelector('#time-value');
+
+    scorePanel.hidden = appMode !== 'play';
+    timeCounter.hidden = appMode !== 'play';
+    scoreValue.textContent = String(score);
+    progressValue.textContent = `${answeredCards.size}/${playDeck.length}`;
+    bestScoreValue.textContent = String(savedStats.bestScore);
+    totalScoreValue.textContent = String(savedStats.totalScore);
+    timeValue.textContent = formatTime(elapsedSeconds);
+    document.querySelector('#play-instructions').textContent = playKind === 'meaning'
+        ? 'Meaning mode: answer kanji with English meanings. Kana still use romaji.'
+        : 'Pronunciation mode: kana use romaji, kanji use hiragana.';
+}
+
+function resetPlayState() {
+    score = 0;
+    answeredCards = new Set();
+    bonusSolved = false;
+    resetPlayTimer();
+    document.querySelector('#bonus-level').hidden = true;
+    document.querySelector('#taito-answer').value = '';
+    document.querySelector('#taito-feedback').textContent = '';
+}
+
+function checkRoundCompletion() {
+    if (appMode !== 'play' || playDeck.length === 0 || answeredCards.size < playDeck.length) return;
+    savedStats.completedRounds += 1;
+    savedStats.bestScore = Math.max(savedStats.bestScore, score);
+    saveStats();
+    updateScorePanel();
+    stopPlayTimer();
+    document.querySelector('#bonus-level').hidden = false;
+    document.querySelector('#taito-answer').focus();
+}
+
+function initGame({ shuffle = true } = {}) {
+    const isSearching = currentSearch.length > 0;
+    const sourceData = isSearching ? getSearchData().filter(item => matchesSearch(item, currentSearch)) : getBrowseData();
+    const displayData = shuffle ? shuffleArray([...sourceData]) : [...sourceData];
+    playDeck = appMode === 'play' ? displayData : [];
+    resetPlayState();
+    updateScorePanel();
+    renderCards(displayData, isSearching);
+    updateScorePanel();
 }
 
 function updateGradeLabels() {
@@ -418,31 +1007,81 @@ function updateGradeLabels() {
 
     document.querySelectorAll('.grade-btn').forEach(button => {
         const grade = parseInt(button.dataset.grade, 10);
-        const count = kanjiData.filter(item => item.grade === grade).length;
+        const loadedCount = kanjiData.filter(item => item.grade === grade).length;
+        const count = loadedCount || kanjiGradeCounts[grade] || 0;
         button.textContent = `Grade ${grade} (${count})`;
     });
 }
 
-// Initialize the game
+function updateGradeVisibility() {
+    const gradeSelection = document.querySelector('.grade-selection');
+    gradeSelection.style.display = currentMode === 'kanji' && currentSearch.length === 0 ? 'flex' : 'none';
+}
+
 updateCurrentYear();
 updateGradeLabels();
+updateGradeVisibility();
+updateScorePanel();
 initGame();
 
-// Add event listeners for navigation buttons
+window.addEventListener('scroll', () => {
+    const betaBadge = document.querySelector('.beta-badge');
+    if (!betaBadge) return;
+    betaBadge.classList.toggle('hidden', window.scrollY > 24);
+}, { passive: true });
+
+document.querySelector('#controls-toggle').addEventListener('click', () => {
+    const advancedControls = document.querySelector('#advanced-controls');
+    const controlsToggle = document.querySelector('#controls-toggle');
+    const isOpen = advancedControls.classList.toggle('open');
+    controlsToggle.setAttribute('aria-expanded', String(isOpen));
+});
+
+document.addEventListener('pointerdown', event => {
+    if (appMode !== 'play') return;
+    if (event.target.closest('.card')) return;
+    closeActiveAnswerCards();
+});
+
+document.querySelectorAll('.mode-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const nextMode = button.dataset.appMode;
+        if (nextMode === appMode) return;
+
+        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        button.closest('.app-mode-switch')?.classList.toggle('play-selected', nextMode === 'play');
+        button.closest('.app-mode-switch')?.classList.toggle('explore-selected', nextMode === 'explore');
+
+        appMode = nextMode;
+        if (appMode !== 'play') stopPlayTimer();
+        initGame({ shuffle: false });
+    });
+});
+
+document.querySelectorAll('.play-kind-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const nextKind = button.dataset.playKind;
+        if (nextKind === playKind) return;
+
+        document.querySelectorAll('.play-kind-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        playKind = nextKind;
+        initGame({ shuffle: false });
+    });
+});
+
 document.querySelectorAll('.nav-btn[data-mode]').forEach(button => {
     button.addEventListener('click', () => {
-        // Update active button
+        const nextMode = button.dataset.mode;
+        if (nextMode === currentMode && currentSearch.length === 0) return;
+
         document.querySelectorAll('.nav-btn[data-mode]').forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
-        
-        // Update current mode
-        currentMode = button.dataset.mode;
-        
-        // Show/hide grade selection
-        const gradeSelection = document.querySelector('.grade-selection');
-        gradeSelection.style.display = currentMode === 'kanji' ? 'flex' : 'none';
-        
-        // Initialize game with new mode
+
+        currentMode = nextMode;
+        updateGradeVisibility();
         initGame();
     });
 });
@@ -451,17 +1090,61 @@ document.querySelector('#shuffle-btn').addEventListener('click', () => {
     initGame();
 });
 
-// Add event listeners for grade selection buttons
 document.querySelectorAll('.grade-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        // Update active button
+    button.addEventListener('click', async () => {
+        const nextGrade = parseInt(button.dataset.grade, 10);
+        if (nextGrade === currentGrade) return;
+        if (!await requestAdvancedAccess('kanji_grade', { grade: nextGrade })) return;
+        if (!await loadKanjiGrade(nextGrade)) return;
+
         document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
-        
-        // Update current grade
-        currentGrade = parseInt(button.dataset.grade);
-        
-        // Initialize game with new grade
+
+        currentGrade = nextGrade;
         initGame();
     });
-}); 
+});
+
+document.querySelector('#search-input').addEventListener('input', event => {
+    currentSearch = normalizeSearch(event.target.value);
+    updateGradeVisibility();
+    initGame({ shuffle: false });
+});
+
+document.querySelector('#clear-search-btn').addEventListener('click', () => {
+    document.querySelector('#search-input').value = '';
+    currentSearch = '';
+    updateGradeVisibility();
+    initGame();
+});
+
+document.querySelector('#taito-submit').addEventListener('click', () => {
+    const rawAnswer = document.querySelector('#taito-answer').value;
+    const answer = normalizeAnswer(rawAnswer);
+    const feedback = document.querySelector('#taito-feedback');
+    const acceptedAnswers = ['たいと', 'だいと', 'おとど'];
+
+    if (isHiraganaInput(rawAnswer) && acceptedAnswers.includes(answer)) {
+        if (!bonusSolved) {
+            bonusSolved = true;
+            score += 10;
+            savedStats.totalScore += 10;
+            savedStats.bestScore = Math.max(savedStats.bestScore, score);
+            saveStats();
+            updateScorePanel();
+        }
+        feedback.textContent = 'Secret level cleared. +10 bonus points.';
+        feedback.className = 'answer-feedback correct';
+        return;
+    }
+
+    feedback.textContent = 'Not yet. Try たいと, だいと, or おとど.';
+    feedback.className = 'answer-feedback';
+});
+
+document.querySelector('#access-wall-close')?.addEventListener('click', hideAccessWall);
+document.querySelector('#access-wall')?.addEventListener('click', event => {
+    if (event.target === event.currentTarget) hideAccessWall();
+});
+document.querySelector('#checkout-monthly')?.addEventListener('click', () => startCheckout('monthly'));
+document.querySelector('#checkout-yearly')?.addEventListener('click', () => startCheckout('yearly'));

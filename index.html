@@ -6,36 +6,106 @@
     <meta name="description" content="A lightweight, free software game for studying Japanese hiragana, katakana, and kanji through simple memory cards.">
     <meta name="author" content="Zero Softworks">
     <meta name="license" content="GPL-3.0-or-later">
-    <link rel="canonical" href="https://japanesememorygame.com/">
+    <link rel="canonical" href="https://www.japanesememorygame.com/">
     <meta property="og:title" content="Japanese Memory Game">
     <meta property="og:description" content="Study Japanese in a fun, effective, and lightweight way.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://japanesememorygame.com/">
+    <meta property="og:url" content="https://www.japanesememorygame.com/">
     <title>Japanese Memory Game</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="beta-badge" aria-label="New beta version">New!<span>Beta version</span></div>
+    <div class="time-counter" id="play-time-counter" hidden aria-label="Play time">
+        <span>Time</span>
+        <strong id="time-value">00:00</strong>
+    </div>
     <div class="page-container">
         <div class="container">
-            <h1>Japanese Memory Game</h1>
-            <div class="navigation">
-                <button class="nav-btn active" data-mode="hiragana">Hiragana</button>
-                <button class="nav-btn" data-mode="katakana">Katakana</button>
-                <button class="nav-btn" data-mode="kanji">Kanji</button>
-                <button class="nav-btn" id="shuffle-btn">Shuffle</button>
-            </div>
-            <div class="grade-selection" style="display: none;">
-                <button class="grade-btn active" data-grade="1">Grade 1 (80)</button>
-                <button class="grade-btn" data-grade="2">Grade 2 (160)</button>
-                <button class="grade-btn" data-grade="3">Grade 3 (200)</button>
-                <button class="grade-btn" data-grade="4">Grade 4 (202)</button>
-                <button class="grade-btn" data-grade="5">Grade 5 (193)</button>
-                <button class="grade-btn" data-grade="6">Grade 6 (191)</button>
-            </div>
+            <header class="hero">
+                <img class="site-logo" src="logo.svg" alt="Japanese Memory Game logo">
+                <h1>Japanese Memory Game</h1>
+                <p class="hero-copy">Explore cards, play recall rounds, and build Japanese memory one tiny win at a time.</p>
+            </header>
+            <section class="controls-panel" aria-label="Game controls">
+                <div class="app-mode-switch" aria-label="App mode">
+                    <button class="mode-btn active" data-app-mode="explore">Explore mode</button>
+                    <button class="mode-btn" data-app-mode="play">Play mode</button>
+                </div>
+                <button class="controls-toggle" id="controls-toggle" type="button" aria-expanded="false" aria-controls="advanced-controls">
+                    <span aria-hidden="true">☰</span>
+                    Controls
+                </button>
+                <div class="advanced-controls" id="advanced-controls">
+                    <div class="navigation" aria-label="Study mode">
+                        <button class="nav-btn active" data-mode="hiragana">Hiragana</button>
+                        <button class="nav-btn" data-mode="katakana">Katakana</button>
+                        <button class="nav-btn" data-mode="kanji">Kanji</button>
+                        <button class="nav-btn shuffle-btn" id="shuffle-btn">Shuffle</button>
+                    </div>
+                    <div class="search-wrap">
+                        <label for="search-input">Search cards</label>
+                        <div class="search-box">
+                            <input id="search-input" type="search" placeholder="Try ka, か, カ, 水, みず, or water" autocomplete="off">
+                            <button class="clear-search-btn" id="clear-search-btn" type="button" aria-label="Clear search">Clear</button>
+                        </div>
+                        <p class="search-hint">Search globally by Japanese, romaji, or English meaning.</p>
+                    </div>
+                    <div class="score-panel" id="score-panel" hidden>
+                        <div class="play-kind-switch" aria-label="Play type">
+                            <button class="play-kind-btn active" data-play-kind="pronunciation" type="button">Pronunciation</button>
+                            <button class="play-kind-btn" data-play-kind="meaning" type="button">Meaning</button>
+                        </div>
+                        <div>
+                            <span class="score-label">Score</span>
+                            <strong id="score-value">0</strong>
+                        </div>
+                        <div>
+                            <span class="score-label">Solved</span>
+                            <strong id="progress-value">0/0</strong>
+                        </div>
+                        <div>
+                            <span class="score-label">Best</span>
+                            <strong id="best-score-value">0</strong>
+                        </div>
+                        <div>
+                            <span class="score-label">Total</span>
+                            <strong id="total-score-value">0</strong>
+                        </div>
+                        <p id="play-instructions">Click a card, type the answer, then submit.</p>
+                    </div>
+                    <div class="grade-selection" style="display: none;" aria-label="Kanji grade">
+                        <button class="grade-btn active" data-grade="1">Grade 1 (80)</button>
+                        <button class="grade-btn" data-grade="2">Grade 2 (160)</button>
+                        <button class="grade-btn" data-grade="3">Grade 3 (200)</button>
+                        <button class="grade-btn" data-grade="4">Grade 4 (202)</button>
+                        <button class="grade-btn" data-grade="5">Grade 5 (193)</button>
+                        <button class="grade-btn" data-grade="6">Grade 6 (191)</button>
+                    </div>
+                </div>
+            </section>
             <div class="game-container">
+                <p class="results-summary" id="results-summary" aria-live="polite"></p>
                 <div class="cards-grid" id="cardsGrid">
                     <!-- Cards will be generated by JavaScript -->
                 </div>
+                <section class="bonus-level" id="bonus-level" hidden aria-live="polite">
+                    <div class="bonus-copy">
+                        <span class="card-label">Secret level unlocked</span>
+                        <h2>Taito challenge</h2>
+                        <p>You cleared the round. Now try the legendary 84-stroke kanji.</p>
+                    </div>
+                    <div class="bonus-card">
+                        <span class="taito-kanji">𱁬</span>
+                        <label for="taito-answer">Answer in hiragana</label>
+                        <div class="answer-row">
+                            <input id="taito-answer" type="text" inputmode="text" autocomplete="off" placeholder="たいと">
+                            <button id="taito-submit" type="button">Check</button>
+                        </div>
+                        <p class="answer-feedback" id="taito-feedback"></p>
+                    </div>
+                </section>
             </div>
         </div>
         <footer>

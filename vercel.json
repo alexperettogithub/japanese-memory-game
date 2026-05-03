@@ -6,10 +6,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.japanesememorygame.com"
+          "value": "japanesememorygame.com"
         }
       ],
-      "destination": "https://japanesememorygame.com/$1",
+      "destination": "https://www.japanesememorygame.com/$1",
       "permanent": true
     }
   ],
