@@ -81,9 +81,9 @@ body::before {
 
 .time-counter {
     position: fixed;
-    top: clamp(0.75rem, 2vw, 1.25rem);
+    top: clamp(5rem, 8vw, 5.7rem);
     left: clamp(0.75rem, 2vw, 1.25rem);
-    z-index: 20;
+    z-index: 19;
     display: inline-flex;
     align-items: baseline;
     gap: 0.35rem;
@@ -164,12 +164,21 @@ h1 {
     z-index: 45;
 }
 
+.site-menu-state {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
 .site-menu-toggle {
     display: grid;
     gap: 4px;
     width: 48px;
     height: 48px;
     place-content: center;
+    padding: 0;
     border: 2px solid rgba(255, 255, 255, 0.86);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.78);
@@ -192,7 +201,7 @@ h1 {
     position: absolute;
     top: calc(100% + 0.6rem);
     right: 0;
-    display: grid;
+    display: none;
     gap: 0.85rem;
     width: min(320px, calc(100vw - 1.5rem));
     padding: 1rem;
@@ -204,8 +213,8 @@ h1 {
     backdrop-filter: blur(18px);
 }
 
-.site-menu-panel[hidden] {
-    display: none;
+.site-menu-state:checked ~ .site-menu-panel {
+    display: grid;
 }
 
 .site-menu-account {
@@ -1118,6 +1127,17 @@ footer a {
         left: 0.42rem;
     }
 
+    .time-counter {
+        top: 4.85rem;
+        left: 0.7rem;
+        padding: 0.34rem 0.5rem;
+        font-size: 0.72rem;
+    }
+
+    .time-counter span {
+        font-size: 0.56rem;
+    }
+
     .container {
         padding: 0.8rem;
     }
@@ -1147,11 +1167,30 @@ footer a {
     }
 
     .app-mode-switch {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.55rem;
         border-radius: 24px;
+        overflow: visible;
+    }
+
+    .app-mode-switch::before {
+        content: none;
     }
 
     .mode-btn {
         border-radius: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 20px rgba(32, 19, 53, 0.08);
+        color: var(--ink);
+        min-height: 58px;
+    }
+
+    .mode-btn.active {
+        background: linear-gradient(135deg, var(--violet), var(--pink));
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(124, 60, 255, 0.22);
     }
 
     .search-box {

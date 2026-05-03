@@ -641,21 +641,13 @@ async function updateAccountPanel() {
 }
 
 function setSiteMenuOpen(open) {
-    const toggle = document.querySelector('#site-menu-toggle');
+    const state = document.querySelector('#site-menu-state');
     const panel = document.querySelector('#site-menu-panel');
     const feedback = document.querySelector('#social-feedback');
-    if (!toggle || !panel) return;
+    if (!state || !panel) return;
 
-    panel.hidden = !open;
-    toggle.setAttribute('aria-expanded', String(open));
+    state.checked = open;
     if (!open && feedback) feedback.textContent = '';
-}
-
-function toggleSiteMenu(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const panel = document.querySelector('#site-menu-panel');
-    setSiteMenuOpen(Boolean(panel?.hidden));
 }
 
 function showSocialComingSoon(event) {
@@ -1257,17 +1249,13 @@ document.querySelector('#access-wall-close')?.addEventListener('click', hideAcce
 document.querySelector('#access-wall')?.addEventListener('click', event => {
     if (event.target === event.currentTarget) hideAccessWall();
 });
-document.querySelector('#site-menu-toggle')?.addEventListener('pointerdown', toggleSiteMenu);
-document.querySelector('#site-menu-toggle')?.addEventListener('keydown', event => {
-    if (event.key === 'Enter' || event.key === ' ') toggleSiteMenu(event);
-});
 document.querySelectorAll('.social-links button').forEach(button => {
     button.addEventListener('click', showSocialComingSoon);
 });
 document.addEventListener('pointerdown', event => {
     const menu = document.querySelector('.site-menu');
-    const panel = document.querySelector('#site-menu-panel');
-    if (panel?.hidden || menu?.contains(event.target)) return;
+    const state = document.querySelector('#site-menu-state');
+    if (!state?.checked || menu?.contains(event.target)) return;
     setSiteMenuOpen(false);
 });
 document.addEventListener('keydown', event => {

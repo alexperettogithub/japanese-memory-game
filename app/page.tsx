@@ -5,12 +5,13 @@ export default function Home() {
     <>
       <div className="beta-badge" aria-label="New beta version">New!<span>Beta version</span></div>
       <nav className="site-menu" aria-label="Account and social links">
-        <button className="site-menu-toggle" id="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu-panel" aria-label="Open menu">
+        <input className="site-menu-state" id="site-menu-state" type="checkbox" aria-hidden="true" />
+        <label className="site-menu-toggle" id="site-menu-toggle" htmlFor="site-menu-state" aria-controls="site-menu-panel" aria-label="Open menu" role="button">
           <span></span>
           <span></span>
           <span></span>
-        </button>
-        <div className="site-menu-panel" id="site-menu-panel" hidden>
+        </label>
+        <div className="site-menu-panel" id="site-menu-panel">
           <div className="site-menu-account">
             <span className="account-kicker">Account</span>
             <strong id="account-status">Checking session...</strong>
