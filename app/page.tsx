@@ -31,6 +31,19 @@ export default function Home() {
             <img className="site-logo" src="/logo.svg" alt="Japanese Memory Game logo" />
             <h1>Japanese Memory Game</h1>
             <p className="hero-copy">Explore cards, play recall rounds, and build Japanese memory one tiny win at a time.</p>
+            <section className="account-panel" id="account-panel" aria-label="Account status">
+              <div>
+                <span className="account-kicker">Account</span>
+                <strong id="account-status">Checking session...</strong>
+                <p id="account-detail">Sign in or create a free account to save your access.</p>
+              </div>
+              <div className="account-actions" id="account-actions">
+                <a className="account-primary" id="account-signin" href="/login?mode=signin">Sign in</a>
+                <a className="account-secondary" id="account-signup" href="/login?mode=signup">Sign up free</a>
+                <button className="account-secondary" id="account-portal" type="button" hidden>Manage Plus</button>
+                <button className="account-secondary" id="account-signout" type="button" hidden>Sign out</button>
+              </div>
+            </section>
           </header>
           <section className="controls-panel" aria-label="Game controls">
             <div className="app-mode-switch explore-selected" aria-label="App mode">

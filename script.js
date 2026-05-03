@@ -577,6 +577,69 @@ async function startCheckout(interval) {
     }
 }
 
+async function startPortal() {
+    const accountStatus = document.querySelector('#account-status');
+    try {
+        const response = await fetch('/api/stripe/portal', { method: 'POST' });
+        if (response.status === 401) {
+            showAccessWall('auth');
+            return;
+        }
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.url) {
+            if (accountStatus) accountStatus.textContent = 'Unable to open Plus settings';
+            return;
+        }
+
+        window.location.href = result.url;
+    } catch (error) {
+        if (accountStatus) accountStatus.textContent = 'Unable to open Plus settings';
+    }
+}
+
+async function signOut() {
+    await fetch('/auth/sign-out', { method: 'POST' }).catch(() => null);
+    window.location.href = '/';
+}
+
+async function updateAccountPanel() {
+    const status = document.querySelector('#account-status');
+    const detail = document.querySelector('#account-detail');
+    const signIn = document.querySelector('#account-signin');
+    const signUp = document.querySelector('#account-signup');
+    const portal = document.querySelector('#account-portal');
+    const signOutButton = document.querySelector('#account-signout');
+    if (!status || !detail || !signIn || !signUp || !portal || !signOutButton) return;
+
+    try {
+        const response = await fetch('/api/account');
+        const account = await response.json();
+
+        if (!account.authenticated) {
+            status.textContent = 'Not signed in';
+            detail.textContent = 'Sign in or create a free account to keep learning without anonymous limits.';
+            signIn.hidden = false;
+            signUp.hidden = false;
+            portal.hidden = true;
+            signOutButton.hidden = true;
+            return;
+        }
+
+        status.textContent = account.plus ? 'Plus active' : 'Signed in';
+        detail.textContent = account.plus
+            ? `${account.email || 'Your account'} has Japanese Memory Game Plus.`
+            : `${account.email || 'Your account'} can use free content without anonymous limits.`;
+        signIn.hidden = true;
+        signUp.hidden = true;
+        portal.hidden = !account.plus;
+        signOutButton.hidden = false;
+    } catch (error) {
+        status.textContent = 'Account unavailable';
+        detail.textContent = 'Refresh the page or try again in a moment.';
+    }
+}
+
 function updateCurrentYear() {
     const currentYear = document.querySelector('#current-year');
     if (currentYear) {
@@ -1045,6 +1108,7 @@ updateCurrentYear();
 updateGradeLabels();
 updateGradeVisibility();
 updateScorePanel();
+updateAccountPanel();
 initGame();
 
 window.addEventListener('scroll', () => {
@@ -1171,3 +1235,5 @@ document.querySelector('#access-wall')?.addEventListener('click', event => {
 });
 document.querySelector('#checkout-monthly')?.addEventListener('click', () => startCheckout('monthly'));
 document.querySelector('#checkout-yearly')?.addEventListener('click', () => startCheckout('yearly'));
+document.querySelector('#account-portal')?.addEventListener('click', startPortal);
+document.querySelector('#account-signout')?.addEventListener('click', signOut);

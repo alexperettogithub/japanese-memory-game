@@ -23,7 +23,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <input id="email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" />
           <button type="submit">{isSignUp ? 'Sign up with email' : 'Sign in with email'}</button>
         </form>
-        <p className="auth-note">{isSignUp ? 'Already have an account? Use Sign in instead.' : 'New here? Use Sign up to create your free account.'}</p>
+        <p className="auth-note">{isSignUp ? 'Already have an account? Use Sign in instead.' : "Forgot your password? You don't need one here: use Sign in and we will email you a fresh magic link."}</p>
         <a href="/">Back to the game</a>
       </section>
     </main>
