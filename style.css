@@ -186,14 +186,16 @@ h1 {
     place-content: center;
     padding: 0;
     border: 3px solid rgba(255, 255, 255, 0.7);
-    border-radius: 28px;
+    border-radius: 15px;
     background: linear-gradient(145deg, #ffffff 0%, #fff0c9 100%);
     box-shadow: var(--soft-shadow);
     cursor: pointer;
     overflow: hidden;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+    transform: rotateY(0deg);
+    transform-style: flat;
+    transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.56s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.22s ease;
 }
 
 .site-menu-toggle::after {
@@ -225,23 +227,25 @@ h1 {
 .site-menu-state:checked + .site-menu-toggle {
     background: linear-gradient(135deg, var(--violet), var(--pink));
     border-color: rgba(255, 255, 255, 0.78);
+    transform: rotateY(180deg);
 }
 
 .site-menu-state:checked + .site-menu-toggle span {
     background: #fff;
+    transform: rotateY(180deg);
 }
 
 .site-menu-state:checked + .site-menu-toggle span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+    transform: rotateY(180deg) translateY(8px) rotate(45deg);
 }
 
 .site-menu-state:checked + .site-menu-toggle span:nth-child(2) {
     opacity: 0;
-    transform: scaleX(0.2);
+    transform: rotateY(180deg) scaleX(0.2);
 }
 
 .site-menu-state:checked + .site-menu-toggle span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+    transform: rotateY(180deg) translateY(-8px) rotate(-45deg);
 }
 
 .site-menu-panel {
@@ -1210,7 +1214,7 @@ footer a {
     .site-menu-toggle {
         width: 58px;
         height: 88px;
-        border-radius: 26px;
+        border-radius: 15px;
     }
 
     .controls-toggle {
