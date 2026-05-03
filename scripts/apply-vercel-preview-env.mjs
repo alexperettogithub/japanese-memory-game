@@ -3,6 +3,8 @@ import { loadOperatorEnv, requiredEnv, optionalEnv, redactedSummary } from './li
 
 loadOperatorEnv();
 
+const previewBranch = optionalEnv('VERCEL_PREVIEW_GIT_BRANCH') || 'staging';
+
 const names = [
   'NEXT_PUBLIC_SUPABASE_URL',
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
@@ -22,7 +24,7 @@ const names = [
 
 for (const name of names) requiredEnv(name);
 
-console.log('Applying Vercel Preview env values. Values will not be printed.');
+console.log(`Applying Vercel Preview env values for branch ${previewBranch}. Values will not be printed.`);
 console.log(JSON.stringify(redactedSummary(names), null, 2));
 
 for (const name of names) {
@@ -31,7 +33,7 @@ for (const name of names) {
 
 function addEnv(name, value) {
   return new Promise((resolve, reject) => {
-    const child = spawn('vercel', ['env', 'add', name, 'preview', '--force', '--sensitive', '--yes'], {
+    const child = spawn('vercel', ['env', 'add', name, 'preview', previewBranch, '--force', '--sensitive', '--yes'], {
       stdio: ['pipe', 'pipe', 'pipe'],
     });
 
