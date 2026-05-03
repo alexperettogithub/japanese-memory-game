@@ -175,6 +175,8 @@ h1 {
     background: rgba(255, 255, 255, 0.78);
     box-shadow: 0 14px 32px rgba(32, 19, 53, 0.16);
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     backdrop-filter: blur(14px);
 }
 
@@ -274,22 +276,35 @@ h1 {
     padding-top: 0.2rem;
 }
 
-.social-links a {
+.social-links button {
     display: grid;
     width: 42px;
     height: 42px;
     place-items: center;
+    border: 0;
     border-radius: 999px;
     background: rgba(32, 19, 53, 0.08);
     color: var(--ink);
     opacity: 0.72;
-    cursor: default;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .social-links svg {
     width: 21px;
     height: 21px;
     fill: currentColor;
+}
+
+.social-feedback:empty {
+    display: none;
+}
+
+.social-feedback {
+    color: var(--violet);
+    font-size: 0.9rem;
+    font-weight: 850;
 }
 
 .controls-panel {

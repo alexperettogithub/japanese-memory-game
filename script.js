@@ -643,10 +643,25 @@ async function updateAccountPanel() {
 function setSiteMenuOpen(open) {
     const toggle = document.querySelector('#site-menu-toggle');
     const panel = document.querySelector('#site-menu-panel');
+    const feedback = document.querySelector('#social-feedback');
     if (!toggle || !panel) return;
 
     panel.hidden = !open;
     toggle.setAttribute('aria-expanded', String(open));
+    if (!open && feedback) feedback.textContent = '';
+}
+
+function toggleSiteMenu(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const panel = document.querySelector('#site-menu-panel');
+    setSiteMenuOpen(Boolean(panel?.hidden));
+}
+
+function showSocialComingSoon(event) {
+    const feedback = document.querySelector('#social-feedback');
+    const name = event.currentTarget.dataset.social || 'Social';
+    if (feedback) feedback.textContent = `${name} coming soon.`;
 }
 
 function updateCurrentYear() {
@@ -1242,12 +1257,12 @@ document.querySelector('#access-wall-close')?.addEventListener('click', hideAcce
 document.querySelector('#access-wall')?.addEventListener('click', event => {
     if (event.target === event.currentTarget) hideAccessWall();
 });
-document.querySelector('#site-menu-toggle')?.addEventListener('click', () => {
-    const panel = document.querySelector('#site-menu-panel');
-    setSiteMenuOpen(Boolean(panel?.hidden));
+document.querySelector('#site-menu-toggle')?.addEventListener('pointerdown', toggleSiteMenu);
+document.querySelector('#site-menu-toggle')?.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') toggleSiteMenu(event);
 });
-document.querySelectorAll('.social-links a[aria-disabled="true"]').forEach(link => {
-    link.addEventListener('click', event => event.preventDefault());
+document.querySelectorAll('.social-links button').forEach(button => {
+    button.addEventListener('click', showSocialComingSoon);
 });
 document.addEventListener('pointerdown', event => {
     const menu = document.querySelector('.site-menu');
