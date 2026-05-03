@@ -909,6 +909,14 @@ footer a {
     font-weight: 750;
 }
 
+.access-wall-feedback:empty {
+    display: none;
+}
+
+.access-wall-feedback {
+    color: var(--pink);
+}
+
 .access-wall-actions {
     display: grid;
     gap: 0.6rem;
@@ -946,6 +954,12 @@ footer a {
 .access-wall-secondary {
     background: rgba(32, 19, 53, 0.08);
     color: var(--ink);
+}
+
+.access-wall-primary:disabled,
+.access-wall-secondary:disabled {
+    cursor: wait;
+    opacity: 0.68;
 }
 
 @media (max-width: 720px) {

@@ -22,6 +22,7 @@ export default function Home() {
             <button className="access-wall-primary" id="checkout-yearly" type="button">Plus yearly · €30/year</button>
             <button className="access-wall-secondary" id="checkout-monthly" type="button">Plus monthly · €5/month</button>
           </div>
+          <p className="access-wall-feedback" id="checkout-feedback" aria-live="polite"></p>
         </div>
       </div>
       <div className="page-container">

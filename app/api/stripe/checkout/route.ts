@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
 import { createStripe } from '@/lib/stripe';
 import { createSupabaseServer } from '@/lib/supabase-server';
 import { getStripeEnv } from '@/lib/env';
@@ -30,25 +31,32 @@ export async function POST(request: Request) {
 
   const price = interval === 'yearly' ? env.stripePlusYearlyPriceId : env.stripePlusMonthlyPriceId;
   const origin = getConfiguredAppUrl();
-  const stripe = createStripe();
-  const session = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    customer_email: data.user.email,
-    client_reference_id: data.user.id,
-    line_items: [{ price, quantity: 1 }],
-    subscription_data: {
+  try {
+    const stripe = createStripe();
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer_email: data.user.email,
+      client_reference_id: data.user.id,
+      line_items: [{ price, quantity: 1 }],
+      subscription_data: {
+        metadata: {
+          user_id: data.user.id,
+          product: 'japanese_memory_game_plus',
+        },
+      },
+      success_url: `${origin}/?checkout=success`,
+      cancel_url: `${origin}/?checkout=cancelled`,
       metadata: {
         user_id: data.user.id,
         product: 'japanese_memory_game_plus',
       },
-    },
-    success_url: `${origin}/?checkout=success`,
-    cancel_url: `${origin}/?checkout=cancelled`,
-    metadata: {
-      user_id: data.user.id,
-      product: 'japanese_memory_game_plus',
-    },
-  });
+    });
 
-  return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: session.url });
+  } catch (error) {
+    if (error instanceof Stripe.errors.StripeError) {
+      return NextResponse.json({ error: 'Checkout is unavailable right now.' }, { status: 502 });
+    }
+    return NextResponse.json({ error: 'Checkout is unavailable right now.' }, { status: 500 });
+  }
 }

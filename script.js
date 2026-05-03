@@ -513,7 +513,10 @@ function showAccessWall(kind) {
     const copy = document.querySelector('#access-wall-copy');
     const authActions = document.querySelector('#auth-actions');
     const plusActions = document.querySelector('#plus-actions');
+    const checkoutFeedback = document.querySelector('#checkout-feedback');
     if (!wall || !label || !title || !copy || !authActions || !plusActions) return;
+
+    if (checkoutFeedback) checkoutFeedback.textContent = '';
 
     if (kind === 'plus') {
         label.textContent = 'Japanese Memory Game Plus';
@@ -538,20 +541,40 @@ function hideAccessWall() {
 }
 
 async function startCheckout(interval) {
-    const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ interval })
-    });
+    const checkoutFeedback = document.querySelector('#checkout-feedback');
+    const buttons = document.querySelectorAll('#checkout-monthly, #checkout-yearly');
 
-    if (response.status === 401) {
-        showAccessWall('auth');
-        return;
+    if (checkoutFeedback) checkoutFeedback.textContent = '';
+    buttons.forEach(button => { button.disabled = true; });
+
+    try {
+        const response = await fetch('/api/stripe/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ interval })
+        });
+
+        if (response.status === 401) {
+            showAccessWall('auth');
+            return;
+        }
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.url) {
+            if (checkoutFeedback) {
+                checkoutFeedback.textContent = result.error || 'Checkout is unavailable right now. Please try again in a moment.';
+            }
+            return;
+        }
+
+        window.location.href = result.url;
+    } catch (error) {
+        if (checkoutFeedback) {
+            checkoutFeedback.textContent = 'Checkout is unavailable right now. Please try again in a moment.';
+        }
+    } finally {
+        buttons.forEach(button => { button.disabled = false; });
     }
-
-    if (!response.ok) return;
-    const result = await response.json();
-    if (result.url) window.location.href = result.url;
 }
 
 function updateCurrentYear() {
