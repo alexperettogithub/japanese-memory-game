@@ -608,9 +608,10 @@ async function updateAccountPanel() {
     const detail = document.querySelector('#account-detail');
     const signIn = document.querySelector('#account-signin');
     const signUp = document.querySelector('#account-signup');
+    const subscribe = document.querySelector('#account-subscribe');
     const portal = document.querySelector('#account-portal');
     const signOutButton = document.querySelector('#account-signout');
-    if (!status || !detail || !signIn || !signUp || !portal || !signOutButton) return;
+    if (!status || !detail || !signIn || !signUp || !subscribe || !portal || !signOutButton) return;
 
     try {
         const response = await fetch('/api/account');
@@ -621,6 +622,7 @@ async function updateAccountPanel() {
             detail.textContent = 'Sign in or create a free account to keep learning without anonymous limits.';
             signIn.hidden = false;
             signUp.hidden = false;
+            subscribe.hidden = false;
             portal.hidden = true;
             signOutButton.hidden = true;
             return;
@@ -632,6 +634,7 @@ async function updateAccountPanel() {
             : `${account.email || 'Your account'} can use free content without anonymous limits.`;
         signIn.hidden = true;
         signUp.hidden = true;
+        subscribe.hidden = account.plus;
         portal.hidden = !account.plus;
         signOutButton.hidden = false;
     } catch (error) {
@@ -656,6 +659,23 @@ function showSocialComingSoon(event) {
     const feedback = document.querySelector('#social-feedback');
     const name = event.currentTarget.dataset.social || 'Social';
     if (feedback) feedback.textContent = `${name} coming soon.`;
+}
+
+function showSubscribePlans() {
+    setSiteMenuOpen(false);
+    showAccessWall('plus');
+}
+
+function getScrollOffset() {
+    return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+}
+
+function updateFloatingHeader() {
+    const betaBadge = document.querySelector('.beta-badge');
+    const timeCounter = document.querySelector('#play-time-counter');
+    const scrolled = getScrollOffset() > 24;
+    if (betaBadge) betaBadge.classList.toggle('hidden', scrolled);
+    if (timeCounter) timeCounter.classList.toggle('raised', scrolled);
 }
 
 function updateCurrentYear() {
@@ -1129,13 +1149,10 @@ updateScorePanel();
 updateAccountPanel();
 initGame();
 
-window.addEventListener('scroll', () => {
-    const betaBadge = document.querySelector('.beta-badge');
-    const timeCounter = document.querySelector('#play-time-counter');
-    const scrolled = window.scrollY > 24;
-    if (betaBadge) betaBadge.classList.toggle('hidden', scrolled);
-    if (timeCounter) timeCounter.classList.toggle('raised', scrolled);
-}, { passive: true });
+updateFloatingHeader();
+window.addEventListener('scroll', updateFloatingHeader, { passive: true });
+window.addEventListener('touchmove', updateFloatingHeader, { passive: true });
+window.visualViewport?.addEventListener('scroll', updateFloatingHeader, { passive: true });
 
 document.querySelector('#controls-toggle').addEventListener('click', () => {
     const advancedControls = document.querySelector('#advanced-controls');
@@ -1255,6 +1272,7 @@ document.querySelector('#access-wall')?.addEventListener('click', event => {
 });
 document.querySelectorAll('.social-links button[data-coming-soon="true"]').forEach(button => {
     button.addEventListener('pointerdown', showSocialComingSoon);
+    button.addEventListener('touchstart', showSocialComingSoon, { passive: false });
     button.addEventListener('click', showSocialComingSoon);
 });
 document.addEventListener('pointerdown', event => {
@@ -1268,5 +1286,6 @@ document.addEventListener('keydown', event => {
 });
 document.querySelector('#checkout-monthly')?.addEventListener('click', () => startCheckout('monthly'));
 document.querySelector('#checkout-yearly')?.addEventListener('click', () => startCheckout('yearly'));
+document.querySelector('#account-subscribe')?.addEventListener('click', showSubscribePlans);
 document.querySelector('#account-portal')?.addEventListener('click', startPortal);
 document.querySelector('#account-signout')?.addEventListener('click', signOut);

@@ -20,6 +20,7 @@ export default function Home() {
           <div className="account-actions" id="account-actions">
             <a className="account-primary" id="account-signin" href="/login?mode=signin">Sign in</a>
             <a className="account-secondary" id="account-signup" href="/login?mode=signup">Sign up free</a>
+            <button className="account-primary" id="account-subscribe" type="button">Subscribe</button>
             <button className="account-secondary" id="account-portal" type="button" hidden>Manage Plus</button>
             <button className="account-secondary" id="account-signout" type="button" hidden>Sign out</button>
           </div>

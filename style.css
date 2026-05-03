@@ -179,15 +179,15 @@ h1 {
 
 .site-menu-toggle {
     display: grid;
-    gap: 4px;
-    width: 66px;
-    height: 54px;
+    gap: 5px;
+    width: 58px;
+    height: 82px;
     place-content: center;
     padding: 0;
     border: 2px solid rgba(255, 255, 255, 0.86);
-    border-radius: 22px;
-    background: rgba(255, 255, 255, 0.86);
-    box-shadow: 0 14px 32px rgba(32, 19, 53, 0.16);
+    border-radius: 26px;
+    background: linear-gradient(145deg, #fff9ef, #ffe8b8);
+    box-shadow: 0 14px 32px rgba(32, 19, 53, 0.16), inset 0 -8px 0 rgba(32, 19, 53, 0.06);
     cursor: pointer;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
@@ -197,7 +197,7 @@ h1 {
 
 .site-menu-toggle:hover {
     transform: translateY(-1px);
-    box-shadow: 0 18px 38px rgba(32, 19, 53, 0.2);
+    box-shadow: 0 18px 38px rgba(32, 19, 53, 0.2), inset 0 -8px 0 rgba(32, 19, 53, 0.06);
 }
 
 .site-menu-toggle span {
@@ -211,7 +211,11 @@ h1 {
 }
 
 .site-menu-state:checked + .site-menu-toggle {
-    background: rgba(255, 255, 255, 0.96);
+    background: linear-gradient(135deg, var(--violet), var(--pink));
+}
+
+.site-menu-state:checked + .site-menu-toggle span {
+    background: #fff;
 }
 
 .site-menu-state:checked + .site-menu-toggle span:nth-child(1) {
