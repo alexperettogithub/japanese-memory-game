@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import Script from 'next/script';
 import '../style.css';
 
 export const metadata: Metadata = {
@@ -30,8 +29,6 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="en">
       <body>
         {children}
-        <Script src="/kanji-data.js" strategy="beforeInteractive" />
-        <Script src="/script.js" strategy="afterInteractive" />
       </body>
     </html>
   );

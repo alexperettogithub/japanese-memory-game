@@ -1,3 +1,5 @@
+import Script from 'next/script';
+
 export default function Home() {
   return (
     <>
@@ -111,6 +113,8 @@ export default function Home() {
           <p>Copyleft <span className="rotated">©</span> <span id="current-year">2026</span> <a href="https://www.zerosoftworks.it" target="_blank" rel="noopener noreferrer">Zero Softworks</a></p>
         </footer>
       </div>
+      <Script src="/kanji-data.js" strategy="beforeInteractive" />
+      <Script src="/script.js" strategy="afterInteractive" />
     </>
   );
 }
