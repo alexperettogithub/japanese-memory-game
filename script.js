@@ -640,6 +640,15 @@ async function updateAccountPanel() {
     }
 }
 
+function setSiteMenuOpen(open) {
+    const toggle = document.querySelector('#site-menu-toggle');
+    const panel = document.querySelector('#site-menu-panel');
+    if (!toggle || !panel) return;
+
+    panel.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+}
+
 function updateCurrentYear() {
     const currentYear = document.querySelector('#current-year');
     if (currentYear) {
@@ -1232,6 +1241,22 @@ document.querySelector('#taito-submit').addEventListener('click', () => {
 document.querySelector('#access-wall-close')?.addEventListener('click', hideAccessWall);
 document.querySelector('#access-wall')?.addEventListener('click', event => {
     if (event.target === event.currentTarget) hideAccessWall();
+});
+document.querySelector('#site-menu-toggle')?.addEventListener('click', () => {
+    const panel = document.querySelector('#site-menu-panel');
+    setSiteMenuOpen(Boolean(panel?.hidden));
+});
+document.querySelectorAll('.social-links a[aria-disabled="true"]').forEach(link => {
+    link.addEventListener('click', event => event.preventDefault());
+});
+document.addEventListener('pointerdown', event => {
+    const menu = document.querySelector('.site-menu');
+    const panel = document.querySelector('#site-menu-panel');
+    if (panel?.hidden || menu?.contains(event.target)) return;
+    setSiteMenuOpen(false);
+});
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') setSiteMenuOpen(false);
 });
 document.querySelector('#checkout-monthly')?.addEventListener('click', () => startCheckout('monthly'));
 document.querySelector('#checkout-yearly')?.addEventListener('click', () => startCheckout('yearly'));

@@ -45,11 +45,11 @@ body::before {
 .beta-badge {
     position: fixed;
     top: clamp(0.75rem, 2vw, 1.25rem);
-    right: clamp(0.75rem, 2vw, 1.25rem);
+    left: clamp(0.75rem, 2vw, 1.25rem);
     z-index: 20;
     padding: 0.78rem 1rem;
     border: 3px solid #fff;
-    border-radius: 999px 0 0 999px;
+    border-radius: 0 999px 999px 0;
     background: linear-gradient(135deg, var(--sun), var(--pink));
     color: var(--ink);
     box-shadow: 0 16px 36px rgba(52, 24, 94, 0.2);
@@ -58,15 +58,15 @@ body::before {
     line-height: 0.95;
     letter-spacing: -0.02em;
     text-transform: uppercase;
-    transform: rotate(6deg);
-    transform-origin: right center;
+    transform: rotate(-6deg);
+    transform-origin: left center;
     transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
 .beta-badge.hidden {
     opacity: 0;
     pointer-events: none;
-    transform: translateX(130%) rotate(6deg);
+    transform: translateX(-130%) rotate(-6deg);
 }
 
 .beta-badge::after {
@@ -157,19 +157,58 @@ h1 {
     font-weight: 650;
 }
 
-.account-panel {
+.site-menu {
+    position: fixed;
+    top: clamp(0.75rem, 2vw, 1.25rem);
+    right: clamp(0.75rem, 2vw, 1.25rem);
+    z-index: 45;
+}
+
+.site-menu-toggle {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 1rem;
-    align-items: center;
-    max-width: 760px;
-    margin: 1.2rem auto 0;
-    padding: 0.9rem;
-    border: 2px solid rgba(32, 19, 53, 0.1);
-    border-radius: 22px;
-    background: rgba(255, 255, 255, 0.72);
-    box-shadow: 0 16px 36px rgba(32, 19, 53, 0.1);
+    gap: 4px;
+    width: 48px;
+    height: 48px;
+    place-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.86);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 14px 32px rgba(32, 19, 53, 0.16);
+    cursor: pointer;
+    backdrop-filter: blur(14px);
+}
+
+.site-menu-toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--ink);
+}
+
+.site-menu-panel {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    display: grid;
+    gap: 0.85rem;
+    width: min(320px, calc(100vw - 1.5rem));
+    padding: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.82);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: var(--shadow);
     text-align: left;
+    backdrop-filter: blur(18px);
+}
+
+.site-menu-panel[hidden] {
+    display: none;
+}
+
+.site-menu-account {
+    display: grid;
+    gap: 0.18rem;
 }
 
 .account-kicker {
@@ -181,13 +220,13 @@ h1 {
     text-transform: uppercase;
 }
 
-.account-panel strong {
+.site-menu-account strong {
     display: block;
     margin-top: 0.1rem;
     font-size: 1.1rem;
 }
 
-.account-panel p {
+.site-menu-account p {
     margin-top: 0.2rem;
     color: var(--muted);
     font-size: 0.92rem;
@@ -227,6 +266,30 @@ h1 {
 .account-primary[hidden],
 .account-secondary[hidden] {
     display: none;
+}
+
+.social-links {
+    display: flex;
+    gap: 0.55rem;
+    padding-top: 0.2rem;
+}
+
+.social-links a {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(32, 19, 53, 0.08);
+    color: var(--ink);
+    opacity: 0.72;
+    cursor: default;
+}
+
+.social-links svg {
+    width: 21px;
+    height: 21px;
+    fill: currentColor;
 }
 
 .controls-panel {
@@ -1037,7 +1100,7 @@ footer a {
 @media (max-width: 720px) {
     .beta-badge {
         top: 1rem;
-        right: 0.42rem;
+        left: 0.42rem;
     }
 
     .container {
@@ -1048,13 +1111,12 @@ footer a {
         border-radius: 24px;
     }
 
-    .account-panel {
-        grid-template-columns: 1fr;
-        text-align: center;
+    .account-actions {
+        justify-content: flex-start;
     }
 
-    .account-actions {
-        justify-content: center;
+    .site-menu-panel {
+        width: min(300px, calc(100vw - 1rem));
     }
 
     .controls-toggle {
