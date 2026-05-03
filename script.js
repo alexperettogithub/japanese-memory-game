@@ -667,13 +667,23 @@ function showSubscribePlans() {
 }
 
 function getScrollOffset() {
-    return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const scrollingElement = document.scrollingElement || document.documentElement;
+    return Math.max(
+        window.scrollY || 0,
+        window.pageYOffset || 0,
+        scrollingElement?.scrollTop || 0,
+        document.documentElement.scrollTop || 0,
+        document.body.scrollTop || 0,
+        window.visualViewport?.pageTop || 0,
+        window.visualViewport?.offsetTop || 0
+    );
 }
 
 function updateFloatingHeader() {
     const betaBadge = document.querySelector('.beta-badge');
     const timeCounter = document.querySelector('#play-time-counter');
     const scrolled = getScrollOffset() > 24;
+    document.documentElement.classList.toggle('floating-header-raised', scrolled);
     if (betaBadge) betaBadge.classList.toggle('hidden', scrolled);
     if (timeCounter) timeCounter.classList.toggle('raised', scrolled);
 }
@@ -689,6 +699,19 @@ function watchFloatingHeader() {
         window.requestAnimationFrame(tick);
     };
     window.requestAnimationFrame(tick);
+}
+
+function observeFloatingHeaderSentinel() {
+    const sentinel = document.querySelector('.page-container');
+    if (!sentinel || !('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+        const scrolled = !entry.isIntersecting || entry.boundingClientRect.top < -24;
+        document.documentElement.classList.toggle('floating-header-raised', scrolled);
+        updateFloatingHeader();
+    }, { threshold: 0, rootMargin: '-24px 0px 0px 0px' });
+
+    observer.observe(sentinel);
 }
 
 function updateCurrentYear() {
@@ -1164,9 +1187,12 @@ initGame();
 
 updateFloatingHeader();
 watchFloatingHeader();
+observeFloatingHeaderSentinel();
 window.addEventListener('scroll', updateFloatingHeader, { passive: true });
+document.addEventListener('scroll', updateFloatingHeader, { passive: true, capture: true });
 window.addEventListener('touchmove', updateFloatingHeader, { passive: true });
 window.visualViewport?.addEventListener('scroll', updateFloatingHeader, { passive: true });
+window.visualViewport?.addEventListener('resize', updateFloatingHeader, { passive: true });
 
 document.querySelector('#controls-toggle').addEventListener('click', () => {
     const advancedControls = document.querySelector('#advanced-controls');

@@ -36,6 +36,18 @@ export default function Home() {
             </a>
           </div>
           <p className="social-feedback" id="social-feedback" aria-live="polite"></p>
+          <section className="app-coming-soon" aria-label="Mobile apps coming soon">
+            <span className="account-kicker">Mobile apps</span>
+            <p>Coming soon to the App Store and Play Store.</p>
+            <div className="app-store-icons" aria-hidden="true">
+              <span className="app-store-icon apple-icon">
+                <svg viewBox="0 0 24 24"><path d="M16.4 12.8c0-2.8 2.3-4.1 2.4-4.2-1.3-1.9-3.3-2.2-4-2.2-1.7-.2-3.3 1-4.1 1-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.2-.5 7.9 1.3 10.5.9 1.3 1.9 2.7 3.3 2.6 1.3-.1 1.8-.8 3.4-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.2-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.5ZM13.7 4.6c.7-.9 1.2-2.1 1.1-3.3-1.1 0-2.4.7-3.2 1.6-.7.8-1.3 2-1.1 3.2 1.2.1 2.5-.6 3.2-1.5Z" /></svg>
+              </span>
+              <span className="app-store-icon play-icon">
+                <svg viewBox="0 0 24 24"><path d="M3.6 2.4c-.3.3-.5.7-.5 1.2v16.8c0 .5.2.9.5 1.2l9.5-9.6-9.5-9.6Zm10.8 8.3 2.3-2.3L5.7 2.1l8.7 8.6Zm2.3 4.9-2.3-2.3-8.7 8.6 11-6.3Zm1.6-5.9-2.6 2.3 2.6 2.3 2.1-1.2c.8-.5.8-1.7 0-2.2l-2.1-1.2Z" /></svg>
+              </span>
+            </div>
+          </section>
         </div>
       </nav>
       <div className="time-counter" id="play-time-counter" hidden aria-label="Play time">

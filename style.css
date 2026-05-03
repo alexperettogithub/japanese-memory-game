@@ -103,6 +103,10 @@ body::before {
     top: clamp(0.75rem, 2vw, 1.25rem);
 }
 
+.floating-header-raised .time-counter {
+    top: clamp(0.75rem, 2vw, 1.25rem);
+}
+
 .time-counter[hidden] {
     display: none;
 }
@@ -367,6 +371,44 @@ h1 {
     color: var(--violet);
     font-size: 0.9rem;
     font-weight: 850;
+}
+
+.app-coming-soon {
+    display: grid;
+    gap: 0.55rem;
+    padding-top: 0.15rem;
+}
+
+.app-coming-soon p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.app-store-icons {
+    display: flex;
+    gap: 0.55rem;
+}
+
+.app-store-icon {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--ink);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(32, 19, 53, 0.16);
+}
+
+.play-icon {
+    background: linear-gradient(135deg, #20c997, #34a853 45%, #fbbc05 72%, #ea4335);
+}
+
+.app-store-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
 }
 
 .controls-panel {
@@ -1188,6 +1230,10 @@ footer a {
     }
 
     .time-counter.raised {
+        top: 1rem;
+    }
+
+    .floating-header-raised .time-counter {
         top: 1rem;
     }
 
