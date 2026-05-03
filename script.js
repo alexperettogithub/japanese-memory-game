@@ -678,6 +678,19 @@ function updateFloatingHeader() {
     if (timeCounter) timeCounter.classList.toggle('raised', scrolled);
 }
 
+function watchFloatingHeader() {
+    let lastOffset = -1;
+    const tick = () => {
+        const nextOffset = getScrollOffset();
+        if (nextOffset !== lastOffset) {
+            lastOffset = nextOffset;
+            updateFloatingHeader();
+        }
+        window.requestAnimationFrame(tick);
+    };
+    window.requestAnimationFrame(tick);
+}
+
 function updateCurrentYear() {
     const currentYear = document.querySelector('#current-year');
     if (currentYear) {
@@ -1150,6 +1163,7 @@ updateAccountPanel();
 initGame();
 
 updateFloatingHeader();
+watchFloatingHeader();
 window.addEventListener('scroll', updateFloatingHeader, { passive: true });
 window.addEventListener('touchmove', updateFloatingHeader, { passive: true });
 window.visualViewport?.addEventListener('scroll', updateFloatingHeader, { passive: true });
@@ -1273,6 +1287,8 @@ document.querySelector('#access-wall')?.addEventListener('click', event => {
 document.querySelectorAll('.social-links button[data-coming-soon="true"]').forEach(button => {
     button.addEventListener('pointerdown', showSocialComingSoon);
     button.addEventListener('touchstart', showSocialComingSoon, { passive: false });
+    button.addEventListener('touchend', showSocialComingSoon, { passive: false });
+    button.addEventListener('pointerup', showSocialComingSoon);
     button.addEventListener('click', showSocialComingSoon);
 });
 document.addEventListener('pointerdown', event => {

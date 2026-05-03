@@ -180,24 +180,35 @@ h1 {
 .site-menu-toggle {
     display: grid;
     gap: 5px;
-    width: 58px;
-    height: 82px;
+    position: relative;
+    width: 64px;
+    height: 96px;
     place-content: center;
     padding: 0;
-    border: 2px solid rgba(255, 255, 255, 0.86);
-    border-radius: 26px;
-    background: linear-gradient(145deg, #fff9ef, #ffe8b8);
-    box-shadow: 0 14px 32px rgba(32, 19, 53, 0.16), inset 0 -8px 0 rgba(32, 19, 53, 0.06);
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    border-radius: 28px;
+    background: linear-gradient(145deg, #ffffff 0%, #fff0c9 100%);
+    box-shadow: var(--soft-shadow);
     cursor: pointer;
+    overflow: hidden;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    backdrop-filter: blur(14px);
-    transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+    transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+}
+
+.site-menu-toggle::after {
+    content: "";
+    position: absolute;
+    inset: auto -20% -28% 12%;
+    height: 56%;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(-16deg);
 }
 
 .site-menu-toggle:hover {
     transform: translateY(-1px);
-    box-shadow: 0 18px 38px rgba(32, 19, 53, 0.2), inset 0 -8px 0 rgba(32, 19, 53, 0.06);
+    box-shadow: 0 18px 38px rgba(32, 19, 53, 0.2);
 }
 
 .site-menu-toggle span {
@@ -206,12 +217,14 @@ h1 {
     height: 3px;
     border-radius: 999px;
     background: var(--ink);
+    z-index: 1;
     transform-origin: center;
     transition: opacity 0.18s ease, transform 0.26s cubic-bezier(0.2, 0.9, 0.18, 1), width 0.22s ease;
 }
 
 .site-menu-state:checked + .site-menu-toggle {
     background: linear-gradient(135deg, var(--violet), var(--pink));
+    border-color: rgba(255, 255, 255, 0.78);
 }
 
 .site-menu-state:checked + .site-menu-toggle span {
@@ -1192,6 +1205,12 @@ footer a {
 
     .site-menu-panel {
         width: min(300px, calc(100vw - 1rem));
+    }
+
+    .site-menu-toggle {
+        width: 58px;
+        height: 88px;
+        border-radius: 26px;
     }
 
     .controls-toggle {
