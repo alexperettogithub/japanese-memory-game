@@ -306,7 +306,8 @@ h1 {
 }
 
 .account-primary,
-.account-secondary {
+.account-secondary,
+.account-danger {
     display: inline-grid;
     min-height: 42px;
     place-items: center;
@@ -331,8 +332,15 @@ h1 {
 }
 
 .account-primary[hidden],
-.account-secondary[hidden] {
+.account-secondary[hidden],
+.account-danger[hidden] {
     display: none;
+}
+
+.account-danger {
+    grid-column: 1 / -1;
+    background: rgba(238, 54, 110, 0.1);
+    color: var(--pink);
 }
 
 .social-links {
@@ -1286,7 +1294,8 @@ footer a {
     }
 
     .account-primary,
-    .account-secondary {
+    .account-secondary,
+    .account-danger {
         min-height: 40px;
         font-size: 0.76rem;
         padding: 0 0.42rem;

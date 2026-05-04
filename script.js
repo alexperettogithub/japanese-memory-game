@@ -606,6 +606,20 @@ async function signOut() {
     window.location.href = '/';
 }
 
+async function deleteAccount() {
+    const confirmed = window.confirm('Delete your account permanently? This cannot be undone.');
+    if (!confirmed) return;
+
+    const response = await fetch('/api/account/delete', { method: 'POST' }).catch(() => null);
+    if (!response?.ok) {
+        const status = document.querySelector('#account-status');
+        if (status) status.textContent = 'Unable to delete account';
+        return;
+    }
+
+    window.location.href = '/?account=deleted';
+}
+
 async function updateAccountPanel() {
     const status = document.querySelector('#account-status');
     const detail = document.querySelector('#account-detail');
@@ -614,7 +628,8 @@ async function updateAccountPanel() {
     const subscribe = document.querySelector('#account-subscribe');
     const portal = document.querySelector('#account-portal');
     const signOutButton = document.querySelector('#account-signout');
-    if (!status || !detail || !signIn || !signUp || !subscribe || !portal || !signOutButton) return;
+    const deleteButton = document.querySelector('#account-delete');
+    if (!status || !detail || !signIn || !signUp || !subscribe || !portal || !signOutButton || !deleteButton) return;
 
     try {
         const response = await fetch('/api/account');
@@ -633,6 +648,7 @@ async function updateAccountPanel() {
             subscribe.hidden = false;
             portal.hidden = true;
             signOutButton.hidden = true;
+            deleteButton.hidden = true;
             return;
         }
 
@@ -645,6 +661,7 @@ async function updateAccountPanel() {
         subscribe.hidden = account.plus;
         portal.hidden = !account.plus;
         signOutButton.hidden = false;
+        deleteButton.hidden = false;
     } catch (error) {
         accountState = { loaded: true, authenticated: false, plus: false };
         status.textContent = 'Account unavailable';
@@ -686,6 +703,10 @@ function showThanksPopup(kind) {
         label.textContent = 'Japanese Memory Game Plus';
         title.textContent = 'You are amazing. Thank you!';
         copy.textContent = 'Your support means a lot. You are helping this project grow into a better, kinder way to learn Japanese. Plus is active: enjoy the advanced kanji!';
+    } else if (kind === 'deleted') {
+        label.textContent = 'Account deleted';
+        title.textContent = 'Your account was removed';
+        copy.textContent = 'Your account has been deleted. You can keep using anonymous Explore mode anytime.';
     } else {
         label.textContent = 'Welcome';
         title.textContent = 'Thanks for signing up';
@@ -704,8 +725,9 @@ function handlePageMessages() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('welcome') === 'signup') showThanksPopup('signup');
     if (params.get('checkout') === 'success') showThanksPopup('subscribe');
+    if (params.get('account') === 'deleted') showThanksPopup('deleted');
 
-    if (params.has('welcome') || params.has('checkout')) {
+    if (params.has('welcome') || params.has('checkout') || params.has('account')) {
         const cleanUrl = `${window.location.pathname}${window.location.hash}`;
         window.history.replaceState({}, '', cleanUrl);
     }
@@ -1381,3 +1403,4 @@ document.querySelector('#checkout-yearly')?.addEventListener('click', () => star
 document.querySelector('#account-subscribe')?.addEventListener('click', showSubscribePlans);
 document.querySelector('#account-portal')?.addEventListener('click', startPortal);
 document.querySelector('#account-signout')?.addEventListener('click', signOut);
+document.querySelector('#account-delete')?.addEventListener('click', deleteAccount);

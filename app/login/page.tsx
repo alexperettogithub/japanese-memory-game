@@ -19,6 +19,22 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         {error ? <p className="auth-error">{isSignUp ? "We couldn't send the sign-up link right now. Please try again in a moment." : "We couldn't send the sign-in link right now. Please try again in a moment."}</p> : null}
         <form action="/auth/sign-in" method="post" className="auth-form">
           <input type="hidden" name="intent" value={mode} />
+          {isSignUp ? (
+            <>
+              <label htmlFor="first-name">First name</label>
+              <input id="first-name" name="firstName" type="text" autoComplete="given-name" required placeholder="Yuki" />
+              <label htmlFor="last-name">Last name <span>optional</span></label>
+              <input id="last-name" name="lastName" type="text" autoComplete="family-name" placeholder="Tanaka" />
+              <label htmlFor="role">Who are you?</label>
+              <select id="role" name="role" required defaultValue="">
+                <option value="" disabled>Choose one</option>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="developer">Developer</option>
+                <option value="japanese_culture_curious">Curious about Japanese culture</option>
+              </select>
+            </>
+          ) : null}
           <label htmlFor="email">Email address</label>
           <input id="email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" />
           <button type="submit">{isSignUp ? 'Sign up with email' : 'Sign in with email'}</button>

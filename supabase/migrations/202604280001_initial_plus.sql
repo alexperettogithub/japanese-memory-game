@@ -3,9 +3,27 @@ create extension if not exists pgcrypto;
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   email text,
+  first_name text,
+  last_name text,
+  role text check (role in ('student', 'teacher', 'developer', 'japanese_culture_curious')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.profiles add column if not exists first_name text;
+alter table public.profiles add column if not exists last_name text;
+alter table public.profiles add column if not exists role text;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'profiles_role_check'
+  ) then
+    alter table public.profiles
+      add constraint profiles_role_check
+      check (role in ('student', 'teacher', 'developer', 'japanese_culture_curious'));
+  end if;
+end $$;
 
 create table if not exists public.anonymous_usage_events (
   id uuid primary key default gen_random_uuid(),
@@ -65,9 +83,20 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
-  insert into public.profiles (id, email)
-  values (new.id, new.email)
-  on conflict (id) do update set email = excluded.email, updated_at = now();
+  insert into public.profiles (id, email, first_name, last_name, role)
+  values (
+    new.id,
+    new.email,
+    new.raw_user_meta_data ->> 'first_name',
+    new.raw_user_meta_data ->> 'last_name',
+    new.raw_user_meta_data ->> 'role'
+  )
+  on conflict (id) do update set
+    email = excluded.email,
+    first_name = coalesce(excluded.first_name, public.profiles.first_name),
+    last_name = coalesce(excluded.last_name, public.profiles.last_name),
+    role = coalesce(excluded.role, public.profiles.role),
+    updated_at = now();
   return new;
 end;
 $$;

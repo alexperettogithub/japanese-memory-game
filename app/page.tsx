@@ -23,6 +23,7 @@ export default function Home() {
             <button className="account-primary" id="account-subscribe" type="button">Subscribe</button>
             <button className="account-secondary" id="account-portal" type="button" hidden>Manage Plus</button>
             <button className="account-secondary" id="account-signout" type="button" hidden>Sign out</button>
+            <button className="account-danger" id="account-delete" type="button" hidden>Delete account</button>
           </div>
           <div className="social-links" aria-label="Social links coming soon">
             <button type="button" aria-label="X profile coming soon" data-social="X" data-coming-soon="true">
