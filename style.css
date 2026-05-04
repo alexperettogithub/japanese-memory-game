@@ -693,6 +693,14 @@ input {
     font-weight: 900;
 }
 
+.play-kind-btn[data-play-kind="meaning"] {
+    display: none !important;
+}
+
+.kanji-mode .play-kind-btn[data-play-kind="meaning"] {
+    display: block !important;
+}
+
 .play-kind-btn[hidden] {
     display: none !important;
 }

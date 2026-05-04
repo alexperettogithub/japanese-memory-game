@@ -374,6 +374,12 @@ const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
 const advancedKanjiCache = new Map();
 
+function updateModeClass() {
+    document.documentElement.classList.toggle('kanji-mode', currentMode === 'kanji');
+}
+
+updateModeClass();
+
 function loadSavedStats() {
     const fallback = { bestScore: 0, totalScore: 0, completedRounds: 0 };
 
@@ -1028,6 +1034,8 @@ function updatePlayKindOptions() {
 
     if (!meaningAvailable && playKind === 'meaning') playKind = 'pronunciation';
 
+    updateModeClass();
+
     playKindSwitch?.classList.toggle('single-option', !meaningAvailable);
 
     if (meaningButton) {
@@ -1343,6 +1351,7 @@ document.querySelectorAll('.nav-btn[data-mode]').forEach(button => {
         button.classList.add('active');
 
         currentMode = nextMode;
+        updateModeClass();
         updateGradeVisibility();
         initGame();
     });
