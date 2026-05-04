@@ -12,7 +12,7 @@ if (!token || !supabaseUrl) {
 const ref = new URL(supabaseUrl).hostname.split('.')[0];
 const appUrl = process.env.APP_URL || 'https://www.japanesememorygame.com';
 const logoUrl = `${appUrl.replace(/\/$/, '')}/logo.svg`;
-const fontFamily = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+const fontFamily = 'Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
 const content = `<!doctype html>
 <html lang="en">
   <head>
@@ -20,9 +20,6 @@ const content = `<!doctype html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@650;750;850;900;950&display=swap" rel="stylesheet">
     <title>Open Japanese Memory Game</title>
   </head>
   <body style="margin:0;background:#fff7df;color:#201335;font-family:${fontFamily};">
