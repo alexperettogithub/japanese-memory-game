@@ -411,7 +411,9 @@ h1 {
 }
 
 .app-store-icons {
-    display: grid;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
     justify-items: start;
     gap: 0.5rem;
 }
