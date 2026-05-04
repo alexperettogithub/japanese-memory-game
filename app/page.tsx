@@ -40,11 +40,11 @@ export default function Home() {
             <span className="account-kicker">Mobile apps</span>
             <p>Coming soon to the App Store and Play Store.</p>
             <div className="app-store-icons" aria-hidden="true">
-              <span className="app-store-icon apple-icon">
-                <svg viewBox="0 0 24 24"><path d="M16.4 12.8c0-2.8 2.3-4.1 2.4-4.2-1.3-1.9-3.3-2.2-4-2.2-1.7-.2-3.3 1-4.1 1-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.2-.5 7.9 1.3 10.5.9 1.3 1.9 2.7 3.3 2.6 1.3-.1 1.8-.8 3.4-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.2-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.5ZM13.7 4.6c.7-.9 1.2-2.1 1.1-3.3-1.1 0-2.4.7-3.2 1.6-.7.8-1.3 2-1.1 3.2 1.2.1 2.5-.6 3.2-1.5Z" /></svg>
+              <span className="store-badge app-store-badge">
+                <svg viewBox="0 0 135 40"><rect width="135" height="40" rx="7" fill="#000"/><path fill="#fff" d="M30.3 20.8c0-3.2 2.6-4.7 2.7-4.8-1.5-2.2-3.8-2.5-4.6-2.5-2-.2-3.8 1.1-4.8 1.1s-2.5-1.1-4.1-1.1c-2.1 0-4.1 1.2-5.1 3.1-2.2 3.7-.6 9.2 1.5 12.3 1 1.5 2.3 3.1 3.9 3 1.6-.1 2.2-1 4.1-1s2.5 1 4.1 1 2.7-1.5 3.7-3c1.2-1.7 1.7-3.4 1.7-3.5-.1 0-3.1-1.2-3.1-4.6ZM27.1 11.4c.9-1 1.5-2.4 1.3-3.8-1.3.1-2.8.9-3.7 1.9-.8.9-1.5 2.3-1.3 3.7 1.4.1 2.8-.7 3.7-1.8Z"/><text x="43" y="14" fill="#fff" fontFamily="Arial, sans-serif" fontSize="7">Download on the</text><text x="43" y="29" fill="#fff" fontFamily="Arial, sans-serif" fontSize="17" fontWeight="700">App Store</text></svg>
               </span>
-              <span className="app-store-icon play-icon">
-                <svg viewBox="0 0 24 24"><path d="M3.6 2.4c-.3.3-.5.7-.5 1.2v16.8c0 .5.2.9.5 1.2l9.5-9.6-9.5-9.6Zm10.8 8.3 2.3-2.3L5.7 2.1l8.7 8.6Zm2.3 4.9-2.3-2.3-8.7 8.6 11-6.3Zm1.6-5.9-2.6 2.3 2.6 2.3 2.1-1.2c.8-.5.8-1.7 0-2.2l-2.1-1.2Z" /></svg>
+              <span className="store-badge play-store-badge">
+                <svg viewBox="0 0 135 40"><rect width="135" height="40" rx="7" fill="#000"/><path fill="#00f0ff" d="m17 8 12.4 12L17 32c-.5-.4-.8-1-.8-1.8V9.8c0-.8.3-1.4.8-1.8Z"/><path fill="#00d084" d="m18.3 7.2 15.4 8.7-4.3 4.1L18.3 7.2Z"/><path fill="#ffc400" d="m33.7 24.1-15.4 8.7L29.4 20l4.3 4.1Z"/><path fill="#ff3b30" d="m33.7 15.9 5 2.8c1 .6 1 2 0 2.6l-5 2.8-4.3-4.1 4.3-4.1Z"/><text x="48" y="14" fill="#fff" fontFamily="Arial, sans-serif" fontSize="7">GET IT ON</text><text x="48" y="29" fill="#fff" fontFamily="Arial, sans-serif" fontSize="16" fontWeight="700">Google Play</text></svg>
               </span>
             </div>
           </section>
@@ -69,6 +69,14 @@ export default function Home() {
             <button className="access-wall-secondary" id="checkout-monthly" type="button">Plus monthly · €5/month</button>
           </div>
           <p className="access-wall-feedback" id="checkout-feedback" aria-live="polite"></p>
+        </div>
+      </div>
+      <div className="thanks-popup" id="thanks-popup" hidden role="dialog" aria-modal="true" aria-labelledby="thanks-title">
+        <div className="thanks-card">
+          <span className="card-label" id="thanks-label">Thank you</span>
+          <h2 id="thanks-title">Welcome aboard</h2>
+          <p id="thanks-copy">Thanks for signing up. Your free account is ready.</p>
+          <button className="access-wall-primary" id="thanks-close" type="button">Continue learning</button>
         </div>
       </div>
       <div className="page-container">

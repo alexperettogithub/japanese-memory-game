@@ -23,10 +23,10 @@ export async function POST(request: Request) {
         const supabase = await createSupabaseServer();
         const { error } = await supabase.auth.signInWithOtp({
           email,
-          options: {
-            shouldCreateUser: intent === 'signup',
-            emailRedirectTo: `${origin}/auth/callback`,
-          },
+            options: {
+              shouldCreateUser: intent === 'signup',
+              emailRedirectTo: `${origin}/auth/callback?intent=${intent}`,
+            },
         });
 
         destination = error ? `/login?${modeQuery}&error=sign-in-failed` : `/login?${modeQuery}&sent=1`;

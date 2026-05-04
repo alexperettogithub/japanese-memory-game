@@ -368,6 +368,7 @@ let savedStats = loadSavedStats();
 let elapsedSeconds = 0;
 let timerStartedAt = null;
 let timerInterval = null;
+let accountState = { loaded: false, authenticated: false, plus: false };
 const anonymousFallbackUsage = { explore_card_used: 0, play_attempt: 0 };
 const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
@@ -427,6 +428,8 @@ function resetPlayTimer() {
 }
 
 async function requestUsage(kind) {
+    if (accountState.authenticated) return true;
+
     anonymousFallbackUsage[kind] += 1;
 
     try {
@@ -616,6 +619,11 @@ async function updateAccountPanel() {
     try {
         const response = await fetch('/api/account');
         const account = await response.json();
+        accountState = {
+            loaded: true,
+            authenticated: Boolean(account.authenticated),
+            plus: Boolean(account.plus),
+        };
 
         if (!account.authenticated) {
             status.textContent = 'Not signed in';
@@ -638,6 +646,7 @@ async function updateAccountPanel() {
         portal.hidden = !account.plus;
         signOutButton.hidden = false;
     } catch (error) {
+        accountState = { loaded: true, authenticated: false, plus: false };
         status.textContent = 'Account unavailable';
         detail.textContent = 'Refresh the page or try again in a moment.';
     }
@@ -664,6 +673,42 @@ function showSocialComingSoon(event) {
 function showSubscribePlans() {
     setSiteMenuOpen(false);
     showAccessWall('plus');
+}
+
+function showThanksPopup(kind) {
+    const popup = document.querySelector('#thanks-popup');
+    const label = document.querySelector('#thanks-label');
+    const title = document.querySelector('#thanks-title');
+    const copy = document.querySelector('#thanks-copy');
+    if (!popup || !label || !title || !copy) return;
+
+    if (kind === 'subscribe') {
+        label.textContent = 'Japanese Memory Game Plus';
+        title.textContent = 'You are amazing. Thank you!';
+        copy.textContent = 'Your support means a lot. You are helping this project grow into a better, kinder way to learn Japanese. Plus is active: enjoy the advanced kanji!';
+    } else {
+        label.textContent = 'Welcome';
+        title.textContent = 'Thanks for signing up';
+        copy.textContent = 'Your free account is ready. You can keep learning without anonymous limits on free content.';
+    }
+
+    popup.hidden = false;
+}
+
+function hideThanksPopup() {
+    const popup = document.querySelector('#thanks-popup');
+    if (popup) popup.hidden = true;
+}
+
+function handlePageMessages() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('welcome') === 'signup') showThanksPopup('signup');
+    if (params.get('checkout') === 'success') showThanksPopup('subscribe');
+
+    if (params.has('welcome') || params.has('checkout')) {
+        const cleanUrl = `${window.location.pathname}${window.location.hash}`;
+        window.history.replaceState({}, '', cleanUrl);
+    }
 }
 
 function getScrollOffset() {
@@ -1183,6 +1228,7 @@ updateGradeLabels();
 updateGradeVisibility();
 updateScorePanel();
 updateAccountPanel();
+handlePageMessages();
 initGame();
 
 updateFloatingHeader();
@@ -1309,6 +1355,10 @@ document.querySelector('#taito-submit').addEventListener('click', () => {
 document.querySelector('#access-wall-close')?.addEventListener('click', hideAccessWall);
 document.querySelector('#access-wall')?.addEventListener('click', event => {
     if (event.target === event.currentTarget) hideAccessWall();
+});
+document.querySelector('#thanks-close')?.addEventListener('click', hideThanksPopup);
+document.querySelector('#thanks-popup')?.addEventListener('click', event => {
+    if (event.target === event.currentTarget) hideThanksPopup();
 });
 document.querySelectorAll('.social-links button[data-coming-soon="true"]').forEach(button => {
     button.addEventListener('pointerdown', showSocialComingSoon);
