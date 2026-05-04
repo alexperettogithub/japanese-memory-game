@@ -11,6 +11,7 @@ export default function Home() {
           <span></span>
           <span></span>
         </label>
+        <label className="site-menu-backdrop" htmlFor="site-menu-state" aria-hidden="true"></label>
         <div className="site-menu-panel" id="site-menu-panel">
           <div className="site-menu-account">
             <span className="account-kicker">Account</span>
@@ -19,7 +20,7 @@ export default function Home() {
           </div>
           <div className="account-actions" id="account-actions">
             <a className="account-primary" id="account-signin" href="/login?mode=signin">Sign in</a>
-            <a className="account-secondary" id="account-signup" href="/login?mode=signup">Sign up free</a>
+            <a className="account-secondary" id="account-signup" href="/login?mode=signup">Sign up</a>
             <button className="account-primary" id="account-subscribe" type="button">Subscribe</button>
             <button className="account-secondary" id="account-portal" type="button" hidden>Manage Plus</button>
             <button className="account-secondary" id="account-signout" type="button" hidden>Sign out</button>

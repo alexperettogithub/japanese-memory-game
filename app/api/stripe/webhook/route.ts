@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import { createStripe } from '@/lib/stripe';
 import { getStripeEnv } from '@/lib/env';
 import { createSupabaseAdmin } from '@/lib/supabase-admin';
+import { sendLifecycleEmail } from '@/lib/email';
 
 export async function POST(request: Request) {
   const body = await request.text();
@@ -58,7 +59,13 @@ async function syncSubscription(event: Stripe.Event) {
     userId = data?.user_id;
   }
 
-  if (userId) await upsertSubscription(admin, subscription, userId);
+  if (userId) {
+    await upsertSubscription(admin, subscription, userId);
+    if (event.type === 'customer.subscription.deleted') {
+      const email = await getProfileEmail(admin, userId);
+      if (email) sendLifecycleEmail('subscription-canceled', email).catch(() => undefined);
+    }
+  }
 }
 
 function hasPlusPrice(subscription: Stripe.Subscription, env: ReturnType<typeof getStripeEnv>) {
@@ -82,4 +89,14 @@ async function upsertSubscription(admin: ReturnType<typeof createSupabaseAdmin>,
   }, {
     onConflict: 'stripe_subscription_id',
   });
+}
+
+async function getProfileEmail(admin: ReturnType<typeof createSupabaseAdmin>, userId: string) {
+  const { data } = await admin
+    .from('profiles')
+    .select('email')
+    .eq('id', userId)
+    .maybeSingle();
+
+  return data?.email || null;
 }

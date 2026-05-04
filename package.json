@@ -10,6 +10,7 @@
     "operator:init": "node scripts/create-operator-env.mjs",
     "setup:vercel-preview-env": "node scripts/apply-vercel-preview-env.mjs",
     "setup:stripe": "node scripts/create-stripe-products.mjs",
+    "setup:supabase-auth-email": "node scripts/apply-supabase-auth-email-template.mjs",
     "setup:supabase-project": "node scripts/create-supabase-project.mjs"
   },
   "dependencies": {
