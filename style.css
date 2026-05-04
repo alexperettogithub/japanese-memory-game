@@ -411,9 +411,8 @@ h1 {
 }
 
 .app-store-icons {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    display: grid;
+    justify-items: start;
     gap: 0.5rem;
 }
 
@@ -430,11 +429,6 @@ h1 {
     display: block;
     width: 100%;
     height: 100%;
-}
-
-.play-store-badge {
-    width: 126px;
-    height: 37px;
 }
 
 .thanks-popup {
