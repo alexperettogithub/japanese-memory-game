@@ -1168,14 +1168,44 @@ footer a {
     text-transform: uppercase;
 }
 
-.auth-form input {
+.auth-form input,
+.auth-form select {
+    width: 100%;
     min-height: 50px;
     border: 2px solid rgba(32, 19, 53, 0.1);
     border-radius: 18px;
     padding: 0.7rem 0.85rem;
+    background: rgba(255, 255, 255, 0.92);
     color: var(--ink);
+    font-family: inherit;
     font-size: 1rem;
     font-weight: 800;
+}
+
+.auth-form select {
+    appearance: none;
+    padding-right: 2.6rem;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--violet) 50%),
+        linear-gradient(135deg, var(--violet) 50%, transparent 50%),
+        linear-gradient(135deg, rgba(124, 60, 255, 0.1), rgba(255, 79, 163, 0.1));
+    background-position:
+        calc(100% - 1.35rem) 50%,
+        calc(100% - 1rem) 50%,
+        100% 0;
+    background-size:
+        0.36rem 0.36rem,
+        0.36rem 0.36rem,
+        3rem 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+    outline: 0;
+    border-color: rgba(124, 60, 255, 0.55);
+    box-shadow: 0 0 0 4px rgba(124, 60, 255, 0.12);
 }
 
 .auth-form button {
