@@ -1020,6 +1020,24 @@ function getRevealText(data) {
     return data.romaji;
 }
 
+function updatePlayKindOptions() {
+    const meaningAvailable = currentMode === 'kanji';
+    const pronunciationButton = document.querySelector('.play-kind-btn[data-play-kind="pronunciation"]');
+    const meaningButton = document.querySelector('.play-kind-btn[data-play-kind="meaning"]');
+
+    if (!meaningAvailable && playKind === 'meaning') playKind = 'pronunciation';
+
+    if (meaningButton) {
+        meaningButton.hidden = !meaningAvailable;
+        meaningButton.disabled = !meaningAvailable;
+        meaningButton.classList.toggle('active', meaningAvailable && playKind === 'meaning');
+    }
+
+    if (pronunciationButton) {
+        pronunciationButton.classList.toggle('active', playKind === 'pronunciation');
+    }
+}
+
 function createCard(data) {
     const card = document.createElement('div');
     card.className = `card ${data.type || currentMode}`;
@@ -1219,6 +1237,7 @@ function checkRoundCompletion() {
 }
 
 function initGame({ shuffle = true } = {}) {
+    updatePlayKindOptions();
     const isSearching = currentSearch.length > 0;
     const sourceData = isSearching ? getSearchData().filter(item => matchesSearch(item, currentSearch)) : getBrowseData();
     const displayData = shuffle ? shuffleArray([...sourceData]) : [...sourceData];
@@ -1293,7 +1312,9 @@ document.querySelectorAll('.mode-btn').forEach(button => {
 
 document.querySelectorAll('.play-kind-btn').forEach(button => {
     button.addEventListener('click', () => {
+        if (button.disabled || button.hidden) return;
         const nextKind = button.dataset.playKind;
+        if (nextKind === 'meaning' && currentMode !== 'kanji') return;
         if (nextKind === playKind) return;
 
         document.querySelectorAll('.play-kind-btn').forEach(btn => btn.classList.remove('active'));

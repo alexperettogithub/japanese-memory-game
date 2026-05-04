@@ -414,7 +414,6 @@ h1 {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    justify-items: start;
     gap: 0.5rem;
 }
 
@@ -1322,6 +1321,12 @@ footer a {
 
     .site-menu-panel {
         width: min(300px, calc(100vw - 1rem));
+        padding-inline: 1rem 1.12rem;
+    }
+
+    .store-badge {
+        width: 130px;
+        height: 39px;
     }
 
     .site-menu-toggle {
