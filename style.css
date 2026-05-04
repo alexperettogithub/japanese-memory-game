@@ -693,6 +693,14 @@ input {
     font-weight: 900;
 }
 
+.play-kind-btn[hidden] {
+    display: none !important;
+}
+
+.play-kind-switch.single-option .play-kind-btn {
+    flex-basis: 100%;
+}
+
 .play-kind-btn.active {
     background: #fff;
     color: var(--ink);

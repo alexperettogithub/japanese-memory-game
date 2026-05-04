@@ -1022,18 +1022,27 @@ function getRevealText(data) {
 
 function updatePlayKindOptions() {
     const meaningAvailable = currentMode === 'kanji';
+    const playKindSwitch = document.querySelector('.play-kind-switch');
     const pronunciationButton = document.querySelector('.play-kind-btn[data-play-kind="pronunciation"]');
     const meaningButton = document.querySelector('.play-kind-btn[data-play-kind="meaning"]');
 
     if (!meaningAvailable && playKind === 'meaning') playKind = 'pronunciation';
 
+    playKindSwitch?.classList.toggle('single-option', !meaningAvailable);
+
     if (meaningButton) {
         meaningButton.hidden = !meaningAvailable;
         meaningButton.disabled = !meaningAvailable;
+        meaningButton.style.display = meaningAvailable ? '' : 'none';
+        meaningButton.setAttribute('aria-hidden', String(!meaningAvailable));
         meaningButton.classList.toggle('active', meaningAvailable && playKind === 'meaning');
     }
 
     if (pronunciationButton) {
+        pronunciationButton.hidden = false;
+        pronunciationButton.disabled = false;
+        pronunciationButton.style.display = '';
+        pronunciationButton.setAttribute('aria-hidden', 'false');
         pronunciationButton.classList.toggle('active', playKind === 'pronunciation');
     }
 }
