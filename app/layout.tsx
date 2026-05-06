@@ -30,7 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="en">
       <body>
         {children}
-        <section className="cookie-banner" id="cookie-banner" hidden aria-label="Cookie notice">
+        <section className="cookie-banner" id="cookie-banner" aria-label="Cookie notice">
           <div>
             <span className="card-label">Privacy</span>
             <p>We use essential cookies for sign-in, anonymous play limits, and security. We also use local storage for your game score. No ads, no analytics, no tracking pixels.</p>
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         </section>
         <Script id="cookie-notice" strategy="afterInteractive">{`
           (() => {
-            const key = 'jmg-cookie-notice-ack-v2';
+            const key = 'jmg-cookie-notice-ack-v3';
             const banner = document.querySelector('#cookie-banner');
             const button = document.querySelector('#cookie-accept');
             if (!banner || !button) return;
