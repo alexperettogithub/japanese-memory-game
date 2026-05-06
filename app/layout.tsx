@@ -39,17 +39,13 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         </section>
         <Script id="cookie-notice" strategy="afterInteractive">{`
           (() => {
-            const key = 'jmg-cookie-notice-ack-v3';
+            const key = 'jmg_cookie_notice=1';
             const banner = document.querySelector('#cookie-banner');
             const button = document.querySelector('#cookie-accept');
             if (!banner || !button) return;
-            try {
-              banner.hidden = window.localStorage.getItem(key) === '1';
-            } catch {
-              banner.hidden = false;
-            }
+            banner.hidden = document.cookie.split('; ').includes(key);
             button.addEventListener('click', () => {
-              try { window.localStorage.setItem(key, '1'); } catch {}
+              document.cookie = 'jmg_cookie_notice=1; Max-Age=15552000; Path=/; SameSite=Lax; Secure';
               banner.hidden = true;
             });
           })();

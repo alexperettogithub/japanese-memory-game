@@ -373,7 +373,7 @@ const anonymousFallbackUsage = { explore_card_used: 0, play_attempt: 0 };
 const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
 const advancedKanjiCache = new Map();
-const cookieNoticeKey = 'jmg-cookie-notice-ack-v3';
+const cookieNoticeKey = 'jmg_cookie_notice=1';
 
 function updateModeClass() {
     document.documentElement.classList.toggle('kanji-mode', currentMode === 'kanji');
@@ -404,19 +404,11 @@ function updateCookieBanner() {
     const banner = document.querySelector('#cookie-banner');
     if (!banner) return;
 
-    try {
-        banner.hidden = window.localStorage.getItem(cookieNoticeKey) === '1';
-    } catch (error) {
-        banner.hidden = false;
-    }
+    banner.hidden = document.cookie.split('; ').includes(cookieNoticeKey);
 }
 
 function acceptCookieNotice() {
-    try {
-        window.localStorage.setItem(cookieNoticeKey, '1');
-    } catch (error) {
-        // Keep the notice dismissible even if localStorage is blocked.
-    }
+    document.cookie = 'jmg_cookie_notice=1; Max-Age=15552000; Path=/; SameSite=Lax; Secure';
 
     const banner = document.querySelector('#cookie-banner');
     if (banner) banner.hidden = true;
