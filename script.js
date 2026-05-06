@@ -373,6 +373,7 @@ const anonymousFallbackUsage = { explore_card_used: 0, play_attempt: 0 };
 const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
 const advancedKanjiCache = new Map();
+const cookieNoticeKey = 'jmg-cookie-notice-ack';
 
 function updateModeClass() {
     document.documentElement.classList.toggle('kanji-mode', currentMode === 'kanji');
@@ -397,6 +398,28 @@ function saveStats() {
     } catch (error) {
         // Score persistence is best-effort until account-based storage exists.
     }
+}
+
+function updateCookieBanner() {
+    const banner = document.querySelector('#cookie-banner');
+    if (!banner) return;
+
+    try {
+        banner.hidden = window.localStorage.getItem(cookieNoticeKey) === '1';
+    } catch (error) {
+        banner.hidden = false;
+    }
+}
+
+function acceptCookieNotice() {
+    try {
+        window.localStorage.setItem(cookieNoticeKey, '1');
+    } catch (error) {
+        // Keep the notice dismissible even if localStorage is blocked.
+    }
+
+    const banner = document.querySelector('#cookie-banner');
+    if (banner) banner.hidden = true;
 }
 
 function formatTime(totalSeconds) {
@@ -613,11 +636,23 @@ async function signOut() {
 }
 
 async function deleteAccount() {
+    if (accountState.plus) {
+        const manageSubscription = window.confirm('You need to cancel your Plus subscription before deleting your account. If you are sure, you will be redirected to Manage Plus now.');
+        if (manageSubscription) startPortal();
+        return;
+    }
+
     const confirmed = window.confirm('Delete your account permanently? This cannot be undone.');
     if (!confirmed) return;
 
     const response = await fetch('/api/account/delete', { method: 'POST' }).catch(() => null);
     if (!response?.ok) {
+        if (response?.status === 409) {
+            const manageSubscription = window.confirm('You need to cancel your Plus subscription before deleting your account. If you are sure, you will be redirected to Manage Plus now.');
+            if (manageSubscription) startPortal();
+            return;
+        }
+
         const status = document.querySelector('#account-status');
         if (status) status.textContent = 'Unable to delete account';
         return;
@@ -1309,6 +1344,7 @@ updateCurrentYear();
 updateGradeLabels();
 updateGradeVisibility();
 updateScorePanel();
+updateCookieBanner();
 updateAccountPanel();
 handlePageMessages();
 initGame();
@@ -1445,6 +1481,7 @@ document.querySelector('#thanks-close')?.addEventListener('click', hideThanksPop
 document.querySelector('#thanks-popup')?.addEventListener('click', event => {
     if (event.target === event.currentTarget) hideThanksPopup();
 });
+document.querySelector('#cookie-accept')?.addEventListener('click', acceptCookieNotice);
 document.querySelectorAll('.social-links button[data-coming-soon="true"]').forEach(button => {
     button.addEventListener('pointerdown', showSocialComingSoon);
     button.addEventListener('touchstart', showSocialComingSoon, { passive: false });
