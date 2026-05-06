@@ -373,7 +373,7 @@ const anonymousFallbackUsage = { explore_card_used: 0, play_attempt: 0 };
 const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
 const advancedKanjiCache = new Map();
-const cookieNoticeKey = 'jmg-cookie-notice-ack';
+const cookieNoticeKey = 'jmg-cookie-notice-ack-v2';
 
 function updateModeClass() {
     document.documentElement.classList.toggle('kanji-mode', currentMode === 'kanji');

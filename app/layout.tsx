@@ -39,7 +39,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         </section>
         <Script id="cookie-notice" strategy="afterInteractive">{`
           (() => {
-            const key = 'jmg-cookie-notice-ack';
+            const key = 'jmg-cookie-notice-ack-v2';
             const banner = document.querySelector('#cookie-banner');
             const button = document.querySelector('#cookie-accept');
             if (!banner || !button) return;
