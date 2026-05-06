@@ -317,7 +317,7 @@ h1 {
 
 .account-actions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, auto));
     gap: 0.5rem;
 }
 
@@ -334,7 +334,9 @@ h1 {
     font-size: 0.82rem;
     font-weight: 950;
     text-decoration: none;
-    white-space: nowrap;
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+    text-align: center;
 }
 
 .account-primary {
@@ -1355,15 +1357,15 @@ footer a {
     }
 
     .account-actions {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .account-primary,
     .account-secondary,
     .account-danger {
         min-height: 40px;
-        font-size: 0.76rem;
-        padding: 0 0.42rem;
+        font-size: 0.74rem;
+        padding: 0.35rem 0.5rem;
     }
 
     .site-menu-panel {
