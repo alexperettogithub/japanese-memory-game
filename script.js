@@ -609,7 +609,7 @@ async function startPortal() {
 
 async function signOut() {
     await fetch('/auth/sign-out', { method: 'POST' }).catch(() => null);
-    window.location.href = '/';
+    window.location.href = '/?auth=signed-out';
 }
 
 async function deleteAccount() {
@@ -705,7 +705,27 @@ function showThanksPopup(kind) {
     const copy = document.querySelector('#thanks-copy');
     if (!popup || !label || !title || !copy) return;
 
-    if (kind === 'subscribe') {
+    if (kind === 'sent') {
+        label.textContent = 'Magic link sent';
+        title.textContent = 'Check your email';
+        copy.textContent = 'We sent you a secure magic link. Open it to finish signing in or signing up.';
+    } else if (kind === 'signin') {
+        label.textContent = 'Signed in';
+        title.textContent = 'Welcome back';
+        copy.textContent = 'You are signed in. Your free account access is active on free content.';
+    } else if (kind === 'signout') {
+        label.textContent = 'Signed out';
+        title.textContent = 'You signed out';
+        copy.textContent = 'Your session was closed successfully. You can keep using anonymous Explore mode anytime.';
+    } else if (kind === 'billing') {
+        label.textContent = 'Billing updated';
+        title.textContent = 'Plus settings saved';
+        copy.textContent = 'Your billing settings were updated. If you canceled your subscription, Plus access will update from Stripe shortly.';
+    } else if (kind === 'checkout-cancelled') {
+        label.textContent = 'Checkout cancelled';
+        title.textContent = 'No payment was made';
+        copy.textContent = 'Your subscription was not changed. You can subscribe to Plus whenever you are ready.';
+    } else if (kind === 'subscribe') {
         label.textContent = 'Japanese Memory Game Plus';
         title.textContent = 'You are amazing. Thank you!';
         copy.textContent = 'Your support means a lot. You are helping this project grow into a better, kinder way to learn Japanese. Plus is active: enjoy the advanced kanji!';
@@ -730,10 +750,14 @@ function hideThanksPopup() {
 function handlePageMessages() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('welcome') === 'signup') showThanksPopup('signup');
+    if (params.get('welcome') === 'signin') showThanksPopup('signin');
     if (params.get('checkout') === 'success') showThanksPopup('subscribe');
+    if (params.get('checkout') === 'cancelled') showThanksPopup('checkout-cancelled');
     if (params.get('account') === 'deleted') showThanksPopup('deleted');
+    if (params.get('auth') === 'signed-out') showThanksPopup('signout');
+    if (params.get('billing') === 'updated') showThanksPopup('billing');
 
-    if (params.has('welcome') || params.has('checkout') || params.has('account')) {
+    if (params.has('welcome') || params.has('checkout') || params.has('account') || params.has('auth') || params.has('billing')) {
         const cleanUrl = `${window.location.pathname}${window.location.hash}`;
         window.history.replaceState({}, '', cleanUrl);
     }

@@ -11,5 +11,5 @@ export async function GET(request: Request) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  redirect(intent === 'signup' ? '/?welcome=signup' : '/');
+  redirect(intent === 'signup' ? '/?welcome=signup' : '/?welcome=signin');
 }

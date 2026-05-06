@@ -15,7 +15,13 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <a className={!isSignUp ? 'active' : ''} href="/login?mode=signin">Sign in</a>
           <a className={isSignUp ? 'active' : ''} href="/login?mode=signup">Sign up</a>
         </div>
-        {sent ? <p className="auth-success">Check your email for the magic link.</p> : null}
+        {sent ? (
+          <div className="auth-success-card" role="status" aria-live="polite">
+            <span className="card-label">Magic link sent</span>
+            <h2>Check your email</h2>
+            <p>We sent you a secure magic link. Open it to finish {isSignUp ? 'your sign-up' : 'signing in'}.</p>
+          </div>
+        ) : null}
         {error ? <p className="auth-error">{isSignUp ? "We couldn't send the sign-up link right now. Please try again in a moment." : "We couldn't send the sign-in link right now. Please try again in a moment."}</p> : null}
         <form action="/auth/sign-in" method="post" className="auth-form">
           <input type="hidden" name="intent" value={mode} />
