@@ -373,7 +373,7 @@ const anonymousFallbackUsage = { explore_card_used: 0, play_attempt: 0 };
 const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
 const advancedKanjiCache = new Map();
-const cookieNoticeKey = 'jmg_cookie_notice=1';
+const storageNoticeKey = 'jmg_storage_notice=1';
 
 function updateModeClass() {
     document.documentElement.classList.toggle('kanji-mode', currentMode === 'kanji');
@@ -400,18 +400,18 @@ function saveStats() {
     }
 }
 
-function updateCookieBanner() {
-    const banner = document.querySelector('#cookie-banner');
-    if (!banner) return;
+function updateStorageNotice() {
+    const notice = document.querySelector('#site-storage-notice');
+    if (!notice) return;
 
-    banner.hidden = document.cookie.split('; ').includes(cookieNoticeKey);
+    notice.hidden = document.cookie.split('; ').includes(storageNoticeKey);
 }
 
-function acceptCookieNotice() {
-    document.cookie = 'jmg_cookie_notice=1; Max-Age=15552000; Path=/; SameSite=Lax; Secure';
+function acceptStorageNotice() {
+    document.cookie = 'jmg_storage_notice=1; Max-Age=15552000; Path=/; SameSite=Lax; Secure';
 
-    const banner = document.querySelector('#cookie-banner');
-    if (banner) banner.hidden = true;
+    const notice = document.querySelector('#site-storage-notice');
+    if (notice) notice.hidden = true;
 }
 
 function formatTime(totalSeconds) {
@@ -1336,7 +1336,7 @@ updateCurrentYear();
 updateGradeLabels();
 updateGradeVisibility();
 updateScorePanel();
-updateCookieBanner();
+updateStorageNotice();
 updateAccountPanel();
 handlePageMessages();
 initGame();
@@ -1473,7 +1473,7 @@ document.querySelector('#thanks-close')?.addEventListener('click', hideThanksPop
 document.querySelector('#thanks-popup')?.addEventListener('click', event => {
     if (event.target === event.currentTarget) hideThanksPopup();
 });
-document.querySelector('#cookie-accept')?.addEventListener('click', acceptCookieNotice);
+document.querySelector('#site-storage-accept')?.addEventListener('click', acceptStorageNotice);
 document.querySelectorAll('.social-links button[data-coming-soon="true"]').forEach(button => {
     button.addEventListener('pointerdown', showSocialComingSoon);
     button.addEventListener('touchstart', showSocialComingSoon, { passive: false });
