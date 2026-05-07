@@ -11,7 +11,7 @@ if (!token || !supabaseUrl) {
 
 const ref = new URL(supabaseUrl).hostname.split('.')[0];
 const appUrl = process.env.APP_URL || 'https://www.japanesememorygame.com';
-const logoUrl = `${appUrl.replace(/\/$/, '')}/logo.svg`;
+const logoUrl = `${appUrl.replace(/\/$/, '')}/logo-email.png`;
 const fontFamily = 'Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
 const content = `<!doctype html>
 <html lang="en">

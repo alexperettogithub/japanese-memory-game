@@ -38,7 +38,7 @@ export function renderBrandedEmail({ title, eyebrow, body, ctaHref, ctaLabel }: 
   ctaLabel: string;
 }) {
   const safeCtaHref = escapeHtml(ctaHref);
-  const logoUrl = `${ctaHref.replace(/\/$/, '')}/logo.svg`;
+  const logoUrl = `${ctaHref.replace(/\/$/, '')}/logo-email.png`;
   const fontFamily = 'Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
   return `<!doctype html>
 <html lang="en">
