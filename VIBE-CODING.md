@@ -1,8 +1,8 @@
 # Vibe Coding
 
-Japanese Memory Game is developed through a transparent vibe coding workflow.
+Japanese Memory Game is developed through a transparent human-led, AI-assisted workflow.
 
-The conceptual direction, educational purpose, ethical constraints, project philosophy, and product vision are defined by Alex Peretto. Implementation work is assisted by AI coding tools.
+The conceptual direction, educational purpose, ethical constraints, project philosophy, and product vision are defined by Alex Peretto. Implementation work is assisted by AI coding tools, including OpenAI Codex and ChatGPT 5.5 through OpenCode by Anomaly.
 
 The purpose of documenting this workflow is to make the development process visible and reusable. The project is intended to help people understand how a small, useful, free software project can be designed conceptually by a human and implemented with the support of AI tools while preserving software freedom.
 
@@ -32,7 +32,9 @@ AI assistance may include:
 - Writing code.
 - Refactoring existing code.
 - Drafting documentation.
-- Preparing deployment configuration.
+- Drafting technical configuration for human review.
 - Helping review technical tradeoffs.
 
-AI-generated contributions are accepted into the project only when they are compatible with the repository's licenses and project direction.
+AI-generated contributions are accepted into the project only when they are compatible with the repository's licenses, privacy position, security expectations, and project direction.
+
+Human review, human smoke testing, AI-assisted review, and real feedback from human users all inform what is ultimately published.

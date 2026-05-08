@@ -19,11 +19,25 @@ export function getAllowedOrigins() {
 }
 
 export function assertAllowedOrigin(request: Request) {
+  const allowedOrigins = getAllowedOrigins();
   const origin = request.headers.get('origin');
-  if (!origin) return;
-  if (!getAllowedOrigins().has(origin.replace(/\/$/, ''))) {
-    throw new Error('Disallowed request origin');
+  if (origin) {
+    if (!allowedOrigins.has(origin.replace(/\/$/, ''))) {
+      throw new Error('Disallowed request origin');
+    }
+    return;
   }
+
+  const referer = request.headers.get('referer');
+  if (referer) {
+    try {
+      if (allowedOrigins.has(new URL(referer).origin.replace(/\/$/, ''))) return;
+    } catch {
+      throw new Error('Invalid request referer');
+    }
+  }
+
+  throw new Error('Missing request origin');
 }
 
 export function getClientIpFromHeaders(request: Request) {

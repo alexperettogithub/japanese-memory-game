@@ -1,48 +1,59 @@
 # Japanese Memory Game
 
-Japanese Memory Game is a lightweight web game for studying Japanese hiragana, katakana, and kanji through simple memory cards.
+Japanese Memory Game is a lightweight web app for studying Japanese hiragana, katakana, and kyōiku kanji through memory cards and active recall.
 
-The project exists to help people around the world study Japanese in a way that is fun, effective, accessible, and light. It is built as free software so that anyone can inspect it, run it, share it, modify it, fork it, and learn from it.
+The project exists to make Japanese learning more playful, accessible, and transparent. Its source code is free software: people are welcome to inspect it, learn from it, run it, share it, modify it, and fork it under the terms of the license.
 
-## Status
+## Product Status
 
-This is an early public version. The production app is currently stable as a lightweight static site. The `staging` branch is used for the Next.js migration, authentication, anonymous usage limits, and the future Plus paywall.
+The public production app is available at:
 
-## Features
+```text
+https://www.japanesememorygame.com
+```
 
-- Browse hiragana, katakana, and kyōiku kanji memory cards.
+The project is moving from a lightweight static site to a Next.js application with account support, anonymous usage limits, server-side content gating, and an optional Plus subscription for advanced kanji content. This work is prepared and tested on the `staging` branch before being promoted to production.
+
+## Learning Features
+
+- Study hiragana, katakana, and kyōiku kanji memory cards.
 - Browse kanji by Japanese elementary school grade.
-- Switch between Explore mode for browsing and Play mode for active recall.
-- In Play mode, choose Pronunciation or Meaning practice.
-- In Pronunciation practice, answer kana cards with romaji and kanji cards with hiragana only.
-- In Meaning practice, answer kanji cards with English meanings. Kana cards still use romaji because kana do not have standalone lexical meanings in this app.
-- Cancel an active Play answer with Esc on desktop or by tapping outside on mobile.
-- When another tile is selected while an unsolved Play tile is open, the first tap/click closes the current tile; a second tap/click opens the next one.
-- Track an accumulating score during each play round.
-- Track elapsed time during each play round.
-- Persist temporary local score stats in the browser with localStorage.
+- Use Explore mode for browsing and Play mode for active recall.
+- Practice pronunciation with romaji for kana and hiragana for kanji.
+- Practice English meanings for kanji cards.
+- Search across Japanese characters, kana readings, romaji, grade labels, and English meanings.
+- Shuffle the active card set on demand.
+- Track the score and elapsed time for a play round.
+- Keep temporary local score stats in the browser.
 - Unlock a hidden Taito kanji challenge after completing a play round.
-- Shuffle the active browsing set on demand.
-- Search globally across hiragana, katakana, and kanji.
-- Search by Japanese characters, kana readings, romaji, kanji, grade label, or English meaning.
 
-Repeated clicks on the already active kanji grade do not reshuffle the cards. Shuffling is an explicit action through the Shuffle button.
+## Access Model
 
-Score persistence is currently local-only and temporary. Future account-based progress, authentication, and paid features need a dedicated product and ethics review before implementation.
+Japanese Memory Game is designed to remain useful without payment or tracking-based monetization.
 
-## Design Direction
+- Hiragana, Katakana, Kanji Grade 1, and Kanji Grade 2 are free learning content.
+- Anonymous visitors can try the app with limited Explore and Play usage before signing in.
+- Signed-in free users can use the free content without anonymous usage caps.
+- Kanji Grade 3 through Grade 6 are planned as Plus content.
+- Plus is intended to support hosting, maintenance, educational expansion, and future free-software infrastructure work.
 
-The interface aims to be fresh, playful, and modern while staying lightweight and accessible. Visual inspiration may come from contemporary learning apps, but the implementation should avoid unnecessary complexity and remain easy to inspect, fork, and modify.
+## Privacy Position
 
-See [DESIGN.md](DESIGN.md).
+The app does not use advertising, analytics platforms, tracking pixels, or surveillance-based monetization.
 
-## Development Workflow
+Only technical data needed to operate the app is used: sign-in session cookies, anonymous usage-limit cookies, local score storage, account data for signed-in users, payment status for subscribers, and transactional email delivery. See [PRIVACY.md](PRIVACY.md).
 
-This project is developed through a vibe coding workflow. The conceptual direction, educational goals, ethical constraints, and product vision are defined by Alex Peretto. Implementation work is assisted by AI coding tools.
+## Free Software And Infrastructure
 
-This workflow is documented openly so that other people can study it, take inspiration from it, and reuse the code in full alignment with the four freedoms of Free Software.
+The application source code is free software under GPL-3.0-or-later. Some operational services used by the hosted app are managed third-party services, currently including hosting, authentication/database, payments, and transactional email.
 
-See [VIBE-CODING.md](VIBE-CODING.md) for details.
+The long-term goal is to keep the code fully inspectable and reusable while progressively reducing infrastructure lock-in where practical. See [ROADMAP.md](ROADMAP.md).
+
+## Human And AI-Assisted Development
+
+Japanese Memory Game is designed, directed, and reviewed by humans. The project uses AI-assisted software development tools, including OpenAI Codex and ChatGPT 5.5 through OpenCode by Anomaly, under human supervision.
+
+Human work includes product direction, educational goals, prompt design, final decisions, code review, smoke testing, user feedback collection, and release approval. AI assistance is used as an engineering aid, not as an autonomous maintainer.
 
 ## Licenses
 
@@ -53,37 +64,21 @@ This repository uses multiple licensing layers:
 - Kanji grade data derived from Wikipedia is licensed under Creative Commons Attribution-ShareAlike 4.0 International, following Wikipedia's licensing terms.
 - Trademarks, trade names, logos, mascots, visual identity, and brand assets are all rights reserved and are not licensed under the GPL or Creative Commons licenses.
 
-The current logo and favicon are matching brand assets and are all rights reserved.
-
 See [LICENSE](LICENSE), [CONTENT-LICENSE.md](CONTENT-LICENSE.md), [TRADEMARKS.md](TRADEMARKS.md), and [NOTICE](NOTICE).
 
-## Run Locally
+## Local Development
 
-Because this is a static site, it can be opened directly in a browser. For local development, using a small static server is recommended.
-
-```sh
-npx serve .
-```
-
-On the `staging` branch, run the Next.js app with:
+Install dependencies and run the development server:
 
 ```sh
 npm install
 npm run dev
 ```
 
-Required runtime variables are listed in `.env.local.example`. Do not commit real secrets.
-
-## Deployment
-
-The project is intended to be deployed on Vercel at:
-
-```text
-https://www.japanesememorygame.com
-```
+Runtime configuration is supplied through the appropriate local or hosted environment.
 
 ## Contributing
 
-Contributions are welcome if they respect the project's licensing, educational purpose, and ethical direction.
+Contributions are welcome when they respect the educational purpose, licensing model, privacy posture, and free-software direction of the project.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
