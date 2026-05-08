@@ -1,0 +1,31 @@
+{
+  "name": "japanese-memory-game",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "operator:init": "node scripts/create-operator-env.mjs",
+    "setup:vercel-preview-env": "node scripts/apply-vercel-preview-env.mjs",
+    "setup:stripe": "node scripts/create-stripe-products.mjs",
+    "setup:supabase-auth-email": "node scripts/apply-supabase-auth-email-template.mjs",
+    "setup:supabase-project": "node scripts/create-supabase-project.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.10.2",
+    "@supabase/supabase-js": "2.105.0",
+    "next": "16.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "resend": "6.12.2",
+    "stripe": "22.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "typescript": "6.0.3"
+  }
+}

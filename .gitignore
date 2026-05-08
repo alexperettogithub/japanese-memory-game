@@ -1,8 +1,11 @@
 .DS_Store
 node_modules/
+.next/
 .vercel/
 *.log
 .env
 .env.*
 !.env.example
+!.env.local.example
+!.env.operator.example
 .vercel
