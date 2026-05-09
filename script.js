@@ -739,7 +739,7 @@ function showThanksPopup(kind) {
     } else if (kind === 'signin') {
         label.textContent = 'Signed in';
         title.textContent = 'Welcome back';
-        copy.textContent = 'You are signed in. Your free account access is active on free content.';
+        copy.textContent = 'You are signed in. Your learning access is ready.';
     } else if (kind === 'signout') {
         label.textContent = 'Signed out';
         title.textContent = 'You signed out';
@@ -763,7 +763,7 @@ function showThanksPopup(kind) {
     } else {
         label.textContent = 'Welcome';
         title.textContent = 'Thanks for signing up';
-        copy.textContent = 'Your free account is ready. You can keep learning without anonymous limits on free content.';
+        copy.textContent = 'Your account is ready. You can keep learning without anonymous limits.';
     }
 
     popup.hidden = false;

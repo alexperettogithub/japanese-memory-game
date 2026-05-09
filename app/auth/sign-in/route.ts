@@ -4,6 +4,23 @@ import { assertAllowedOrigin, checkRateLimit, getConfiguredAppUrl, getRateLimitK
 
 const PROFILE_ROLES = new Set(['student', 'teacher', 'developer', 'japanese_culture_curious']);
 
+function getAuthErrorCode(error: unknown) {
+  if (!error || typeof error !== 'object') return 'unknown';
+  if ('code' in error && typeof error.code === 'string') return error.code;
+  if ('name' in error && typeof error.name === 'string') return error.name;
+  return 'unknown';
+}
+
+function isMissingAccountSignIn(error: unknown) {
+  return getAuthErrorCode(error) === 'otp_disabled';
+}
+
+function getAuthErrorStatus(error: unknown) {
+  if (!error || typeof error !== 'object') return undefined;
+  if ('status' in error && typeof error.status === 'number') return error.status;
+  return undefined;
+}
+
 export async function POST(request: Request) {
   let destination = '/login?error=server-config';
   let intent = 'signin';
@@ -41,10 +58,27 @@ export async function POST(request: Request) {
           },
         });
 
-        destination = error ? `/login?${modeQuery}&error=sign-in-failed` : `/login?${modeQuery}&sent=1`;
+        if (error) {
+          console.error('auth.magic_link.failed', {
+            intent,
+            code: getAuthErrorCode(error),
+            status: getAuthErrorStatus(error),
+          });
+        }
+
+        if (error && intent === 'signin' && isMissingAccountSignIn(error)) {
+          destination = '/login?mode=signup&error=account-not-found';
+        } else {
+          destination = error ? `/login?${modeQuery}&error=sign-in-failed` : `/login?${modeQuery}&sent=1`;
+        }
       }
     }
   } catch (error) {
+    console.error('auth.magic_link.exception', {
+      intent,
+      code: getAuthErrorCode(error),
+      status: getAuthErrorStatus(error),
+    });
     destination = `/login?mode=${intent}&error=server-config`;
   }
 
