@@ -1299,7 +1299,7 @@ function resetPlayState() {
     answeredCards = new Set();
     bonusSolved = false;
     resetPlayTimer();
-    document.querySelector('#bonus-level').hidden = true;
+    document.querySelector('#bonus-level').hidden = !accountState.admin;
     document.querySelector('#taito-answer').value = '';
     document.querySelector('#taito-feedback').textContent = '';
 }
