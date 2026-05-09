@@ -39,6 +39,12 @@ export function getStripeEnv() {
   return {
     stripeSecretKey: requireEnv('STRIPE_SECRET_KEY'),
     stripeWebhookSecret: requireEnv('STRIPE_WEBHOOK_SECRET'),
+    ...getStripePriceEnv(),
+  };
+}
+
+export function getStripePriceEnv() {
+  return {
     stripePlusMonthlyPriceId: requireEnv('STRIPE_PLUS_MONTHLY_PRICE_ID'),
     stripePlusYearlyPriceId: requireEnv('STRIPE_PLUS_YEARLY_PRICE_ID'),
   };

@@ -11,7 +11,14 @@ export async function GET() {
   }
 
   const admin = isAdminEmail(data.user.email);
-  const subscription = await getActivePlusSubscription(data.user.id);
+  let subscription = null;
+  try {
+    subscription = await getActivePlusSubscription(data.user.id);
+  } catch (error) {
+    console.warn('account.subscription_check.failed', {
+      code: error && typeof error === 'object' && 'code' in error ? error.code : 'unknown',
+    });
+  }
   const plus = admin || Boolean(subscription);
   return NextResponse.json({
     authenticated: true,

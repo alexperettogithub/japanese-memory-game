@@ -1,5 +1,5 @@
 import { createSupabaseAdmin } from './supabase-admin';
-import { getAdminEnv, getStripeEnv } from './env';
+import { getAdminEnv, getStripePriceEnv } from './env';
 export { isAdvancedKanjiGrade } from './kanji';
 
 export function isAdminEmail(email?: string | null) {
@@ -9,7 +9,7 @@ export function isAdminEmail(email?: string | null) {
 
 export async function getActivePlusSubscription(userId: string) {
   const admin = createSupabaseAdmin();
-  const stripeEnv = getStripeEnv();
+  const stripeEnv = getStripePriceEnv();
   const plusPriceIds = [stripeEnv.stripePlusMonthlyPriceId, stripeEnv.stripePlusYearlyPriceId];
   const { data, error } = await admin
     .from('subscriptions')
