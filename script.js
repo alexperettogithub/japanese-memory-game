@@ -368,7 +368,7 @@ let savedStats = loadSavedStats();
 let elapsedSeconds = 0;
 let timerStartedAt = null;
 let timerInterval = null;
-let accountState = { loaded: false, authenticated: false, plus: false };
+let accountState = { loaded: false, authenticated: false, plus: false, admin: false, billingPortalAvailable: false };
 const anonymousFallbackUsage = { explore_card_used: 0, play_attempt: 0 };
 const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
@@ -612,7 +612,7 @@ async function startPortal() {
 
         const result = await response.json().catch(() => ({}));
         if (!response.ok || !result.url) {
-            if (accountStatus) accountStatus.textContent = 'Unable to open Plus settings';
+            if (accountStatus) accountStatus.textContent = result.error || 'Unable to open Plus settings';
             return;
         }
 
@@ -628,7 +628,7 @@ async function signOut() {
 }
 
 async function deleteAccount() {
-    if (accountState.plus) {
+    if (accountState.billingPortalAvailable) {
         const manageSubscription = window.confirm('You need to cancel your Plus subscription before deleting your account. If you are sure, you will be redirected to Manage Plus now.');
         if (manageSubscription) startPortal();
         return;
@@ -671,6 +671,8 @@ async function updateAccountPanel() {
             loaded: true,
             authenticated: Boolean(account.authenticated),
             plus: Boolean(account.plus),
+            admin: Boolean(account.admin),
+            billingPortalAvailable: Boolean(account.billingPortalAvailable),
         };
 
         if (!account.authenticated) {
@@ -685,21 +687,30 @@ async function updateAccountPanel() {
             return;
         }
 
-        status.textContent = account.plus ? 'Plus active' : 'Signed in';
-        detail.textContent = account.plus
+        status.textContent = account.admin ? 'Admin access active' : account.plus ? 'Plus active' : 'Signed in';
+        detail.textContent = account.admin
+            ? `${account.email || 'Your account'} has admin learning access.`
+            : account.plus
             ? `${account.email || 'Your account'} has Japanese Memory Game Plus.`
             : `${account.email || 'Your account'} can use free content without anonymous limits.`;
         signIn.hidden = true;
         signUp.hidden = true;
         subscribe.hidden = account.plus;
-        portal.hidden = !account.plus;
+        portal.hidden = !account.billingPortalAvailable;
         signOutButton.hidden = false;
         deleteButton.hidden = false;
+
+        if (account.admin) unlockAdminTestingAccess();
     } catch (error) {
-        accountState = { loaded: true, authenticated: false, plus: false };
+        accountState = { loaded: true, authenticated: false, plus: false, admin: false, billingPortalAvailable: false };
         status.textContent = 'Account unavailable';
         detail.textContent = 'Refresh the page or try again in a moment.';
     }
+}
+
+function unlockAdminTestingAccess() {
+    const bonusLevel = document.querySelector('#bonus-level');
+    if (bonusLevel) bonusLevel.hidden = false;
 }
 
 function setSiteMenuOpen(open) {

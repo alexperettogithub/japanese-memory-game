@@ -23,6 +23,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ allowed: false, advanced: true, authRequired: true });
   }
 
-  const plus = await hasActivePlus(data.user.id);
+  const plus = await hasActivePlus(data.user.id, data.user.email);
   return NextResponse.json({ allowed: plus, advanced: true, paymentRequired: !plus });
 }

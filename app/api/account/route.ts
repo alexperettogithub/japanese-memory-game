@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { hasActivePlus } from '@/lib/access';
+import { getActivePlusSubscription, hasActivePlus, isAdminEmail } from '@/lib/access';
 import { createSupabaseServer } from '@/lib/supabase-server';
 
 export async function GET() {
@@ -10,10 +10,14 @@ export async function GET() {
     return NextResponse.json({ authenticated: false, plus: false });
   }
 
-  const plus = await hasActivePlus(data.user.id);
+  const admin = isAdminEmail(data.user.email);
+  const subscription = await getActivePlusSubscription(data.user.id);
+  const plus = admin || Boolean(subscription);
   return NextResponse.json({
     authenticated: true,
     plus,
+    admin,
+    billingPortalAvailable: Boolean(subscription?.stripe_customer_id),
     email: data.user.email || null,
   });
 }

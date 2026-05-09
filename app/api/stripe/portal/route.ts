@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createStripe } from '@/lib/stripe';
 import { createSupabaseServer } from '@/lib/supabase-server';
-import { createSupabaseAdmin } from '@/lib/supabase-admin';
+import { getActivePlusSubscription } from '@/lib/access';
 import { assertAllowedOrigin, getConfiguredAppUrl } from '@/lib/security';
 
 export async function POST(request: Request) {
@@ -15,23 +15,26 @@ export async function POST(request: Request) {
   const { data } = await supabase.auth.getUser();
   if (!data.user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-  const admin = createSupabaseAdmin();
-  const { data: subscription, error } = await admin
-    .from('subscriptions')
-    .select('stripe_customer_id')
-    .eq('user_id', data.user.id)
-    .maybeSingle();
-
-  if (error || !subscription?.stripe_customer_id) {
-    return NextResponse.json({ error: 'No Stripe customer found' }, { status: 404 });
+  const subscription = await getActivePlusSubscription(data.user.id);
+  if (!subscription?.stripe_customer_id) {
+    return NextResponse.json({ error: 'No manageable Plus subscription found' }, { status: 404 });
   }
 
   const origin = getConfiguredAppUrl();
   const stripe = createStripe();
-  const session = await stripe.billingPortal.sessions.create({
-    customer: subscription.stripe_customer_id,
-    return_url: `${origin}/?billing=updated`,
-  });
+  let session;
+  try {
+    session = await stripe.billingPortal.sessions.create({
+      customer: subscription.stripe_customer_id,
+      return_url: `${origin}/?billing=updated`,
+    });
+  } catch (error) {
+    console.error('billing.portal.failed', {
+      code: error && typeof error === 'object' && 'code' in error ? error.code : 'unknown',
+      type: error && typeof error === 'object' && 'type' in error ? error.type : 'unknown',
+    });
+    return NextResponse.json({ error: 'Plus settings are unavailable for this subscription.' }, { status: 502 });
+  }
 
   return NextResponse.json({ url: session.url });
 }

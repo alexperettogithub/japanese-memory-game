@@ -3,7 +3,7 @@ import { createSupabaseAdmin } from '@/lib/supabase-admin';
 import { createSupabaseServer } from '@/lib/supabase-server';
 import { assertAllowedOrigin } from '@/lib/security';
 import { sendLifecycleEmail } from '@/lib/email';
-import { hasActivePlus } from '@/lib/access';
+import { getActivePlusSubscription } from '@/lib/access';
 
 export async function POST(request: Request) {
   try {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   if (!data.user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
   const email = data.user.email;
 
-  if (await hasActivePlus(data.user.id)) {
+  if (await getActivePlusSubscription(data.user.id)) {
     return NextResponse.json({ error: 'Cancel Plus before deleting your account', subscriptionRequired: true }, { status: 409 });
   }
 

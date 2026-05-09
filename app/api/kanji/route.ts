@@ -23,7 +23,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    if (!await hasActivePlus(data.user.id)) {
+    if (!await hasActivePlus(data.user.id, data.user.email)) {
       return NextResponse.json({ error: 'Plus required' }, { status: 402 });
     }
   }

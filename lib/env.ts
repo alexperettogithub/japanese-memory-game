@@ -4,6 +4,13 @@ function requireEnv(name: string) {
   return value;
 }
 
+function optionalCsvEnv(name: string) {
+  return (process.env[name] || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
 export function getPublicEnv() {
   return {
     supabaseUrl: requireEnv('NEXT_PUBLIC_SUPABASE_URL'),
@@ -34,6 +41,12 @@ export function getStripeEnv() {
     stripeWebhookSecret: requireEnv('STRIPE_WEBHOOK_SECRET'),
     stripePlusMonthlyPriceId: requireEnv('STRIPE_PLUS_MONTHLY_PRICE_ID'),
     stripePlusYearlyPriceId: requireEnv('STRIPE_PLUS_YEARLY_PRICE_ID'),
+  };
+}
+
+export function getAdminEnv() {
+  return {
+    adminEmails: optionalCsvEnv('JMG_ADMIN_EMAILS').map((email) => email.toLowerCase()),
   };
 }
 
