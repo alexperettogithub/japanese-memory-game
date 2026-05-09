@@ -151,11 +151,11 @@ export default function Home() {
             <section className="bonus-level" id="bonus-level" hidden aria-live="polite">
               <div className="bonus-copy">
                 <span className="card-label">Secret level unlocked</span>
-                <h2>Taito challenge</h2>
+                <h2>Final challenge</h2>
                 <p>You cleared the round. Now try the legendary 84-stroke kanji.</p>
               </div>
               <div className="bonus-card">
-                <span className="taito-kanji">𱁬</span>
+                <img className="taito-kanji" src="/taito-1.svg" alt="Final challenge kanji" />
                 <label htmlFor="taito-answer">Answer in hiragana</label>
                 <div className="answer-row">
                   <input id="taito-answer" type="text" inputMode="text" autoComplete="off" placeholder="たいと" />

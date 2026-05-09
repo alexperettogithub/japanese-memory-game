@@ -1467,7 +1467,7 @@ document.querySelector('#taito-submit').addEventListener('click', () => {
             saveStats();
             updateScorePanel();
         }
-        feedback.textContent = 'Secret level cleared. +10 bonus points.';
+        feedback.textContent = 'Final challenge cleared. +10 bonus points.';
         feedback.className = 'answer-feedback correct';
         return;
     }

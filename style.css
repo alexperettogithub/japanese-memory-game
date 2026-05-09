@@ -1120,10 +1120,9 @@ input {
 }
 
 .taito-kanji {
-    text-align: center;
-    font-size: clamp(4rem, 15vw, 7rem);
-    font-weight: 950;
-    line-height: 1;
+    display: block;
+    width: min(100%, 16rem);
+    margin: 0 auto;
 }
 
 .empty-state {
