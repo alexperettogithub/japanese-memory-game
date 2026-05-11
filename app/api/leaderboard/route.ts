@@ -51,10 +51,7 @@ export async function GET(request: NextRequest) {
   query = query.eq('grade', grade);
 
   const { data, error } = await query;
-  if (error) {
-    if (error.code === '42P01') return NextResponse.json({ entries: [], setupRequired: true });
-    return NextResponse.json({ error: 'Unable to load leaderboard' }, { status: 500 });
-  }
+  if (error) return NextResponse.json({ entries: [], setupRequired: true });
 
   return NextResponse.json({ entries: data || [] });
 }
