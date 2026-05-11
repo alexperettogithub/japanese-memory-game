@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import { PageNav } from '../components/PageNav';
 
 export default function PrivacyPage() {
   return (
     <main className="legal-page">
+      <PageNav />
       <section className="legal-hero">
         <span className="card-label">GDPR</span>
         <h1>Privacy Policy</h1>

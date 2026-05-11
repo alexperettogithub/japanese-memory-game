@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import { PageNav } from '../components/PageNav';
 
 export default function RefundsPage() {
   return (
     <main className="legal-page">
+      <PageNav />
       <section className="legal-hero">
         <span className="card-label">Consumer rights</span>
         <h1>Refunds and Withdrawal</h1>

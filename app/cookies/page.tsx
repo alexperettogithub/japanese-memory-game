@@ -1,6 +1,9 @@
+import { PageNav } from '../components/PageNav';
+
 export default function CookiesPage() {
   return (
     <main className="legal-page">
+      <PageNav />
       <section className="legal-hero">
         <span className="card-label">Cookies</span>
         <h1>Cookie and Storage Policy</h1>

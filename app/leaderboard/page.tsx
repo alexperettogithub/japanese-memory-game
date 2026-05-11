@@ -1,8 +1,10 @@
 import Script from 'next/script';
+import { PageNav } from '../components/PageNav';
 
 export default function LeaderboardPage() {
   return (
     <main className="legal-page leaderboard-page">
+      <PageNav />
       <section className="legal-hero leaderboard-hero">
         <span className="card-label">Opt-in rankings</span>
         <h1>Leaderboard</h1>

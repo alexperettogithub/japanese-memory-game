@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import { PageNav } from '../components/PageNav';
 
 export default function LegalNoticePage() {
   return (
     <main className="legal-page">
+      <PageNav />
       <section className="legal-hero">
         <span className="card-label">Legal notice</span>
         <h1>Legal Notice</h1>

@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import { PageNav } from '../components/PageNav';
 
 export default function FreeCulturePage() {
   return (
     <main className="legal-page free-culture-page">
+      <PageNav />
       <section className="legal-hero free-culture-hero">
         <span className="card-label">Free software and free culture</span>
         <h1>Knowledge Should Travel Freely</h1>

@@ -1,3 +1,5 @@
+import { PageNav } from '../components/PageNav';
+
 export default async function LoginPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
   const sent = params.sent === '1';
@@ -12,6 +14,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
 
   return (
     <main className="auth-page">
+      <PageNav />
       <section className="auth-card">
         <span className="card-label">Japanese Memory Game Plus</span>
         <h1>{isSignUp ? 'Sign up' : 'Sign in'}</h1>
