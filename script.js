@@ -382,7 +382,7 @@ function updateModeClass() {
 updateModeClass();
 
 function loadSavedStats() {
-    const fallback = { bestScore: 0, totalScore: 0, completedRounds: 0 };
+    const fallback = { bestScore: 0, totalScore: 0, completedRounds: 0, bestTimeSeconds: null, lastTimeSeconds: null };
 
     try {
         const saved = window.localStorage.getItem('jmg-score-stats');
@@ -1291,6 +1291,8 @@ function updateScorePanel() {
     const scoreValue = document.querySelector('#score-value');
     const progressValue = document.querySelector('#progress-value');
     const bestScoreValue = document.querySelector('#best-score-value');
+    const bestTimeValue = document.querySelector('#best-time-value');
+    const lastTimeValue = document.querySelector('#last-time-value');
     const totalScoreValue = document.querySelector('#total-score-value');
     const timeValue = document.querySelector('#time-value');
 
@@ -1299,6 +1301,8 @@ function updateScorePanel() {
     scoreValue.textContent = String(score);
     progressValue.textContent = `${answeredCards.size}/${playDeck.length}`;
     bestScoreValue.textContent = String(savedStats.bestScore);
+    bestTimeValue.textContent = savedStats.bestTimeSeconds == null ? '--:--' : formatTime(savedStats.bestTimeSeconds);
+    lastTimeValue.textContent = savedStats.lastTimeSeconds == null ? '--:--' : formatTime(savedStats.lastTimeSeconds);
     totalScoreValue.textContent = String(savedStats.totalScore);
     timeValue.textContent = formatTime(elapsedSeconds);
     document.querySelector('#play-instructions').textContent = playKind === 'meaning'
@@ -1318,11 +1322,15 @@ function resetPlayState() {
 
 function checkRoundCompletion() {
     if (appMode !== 'play' || playDeck.length === 0 || answeredCards.size < playDeck.length) return;
+    stopPlayTimer();
+    savedStats.lastTimeSeconds = elapsedSeconds;
+    savedStats.bestTimeSeconds = savedStats.bestTimeSeconds == null
+        ? elapsedSeconds
+        : Math.min(savedStats.bestTimeSeconds, elapsedSeconds);
     savedStats.completedRounds += 1;
     savedStats.bestScore = Math.max(savedStats.bestScore, score);
     saveStats();
     updateScorePanel();
-    stopPlayTimer();
     document.querySelector('#bonus-level').hidden = false;
     document.querySelector('#taito-answer').focus();
 }

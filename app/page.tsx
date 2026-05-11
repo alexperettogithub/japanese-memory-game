@@ -135,6 +135,14 @@ export default function Home() {
                   <strong id="best-score-value">0</strong>
                 </div>
                 <div>
+                  <span className="score-label">Best time</span>
+                  <strong id="best-time-value">--:--</strong>
+                </div>
+                <div>
+                  <span className="score-label">Last run</span>
+                  <strong id="last-time-value">--:--</strong>
+                </div>
+                <div>
                   <span className="score-label">Total</span>
                   <strong id="total-score-value">0</strong>
                 </div>
@@ -179,6 +187,7 @@ export default function Home() {
             <a href="/privacy">Privacy</a>
             <a href="/cookies">Cookies</a>
             <a href="/refunds">Refunds</a>
+            <a href="/free-culture">Free Culture</a>
           </nav>
         </footer>
       </div>

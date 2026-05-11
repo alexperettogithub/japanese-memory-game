@@ -719,7 +719,7 @@ input {
 
 .score-panel {
     display: grid;
-    grid-template-columns: repeat(4, minmax(92px, 1fr));
+    grid-template-columns: repeat(6, minmax(92px, 1fr));
     align-items: center;
     gap: 0.8rem;
     width: min(760px, 100%);
@@ -781,6 +781,11 @@ input {
     padding: 0.6rem 0.9rem;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.12);
+}
+
+.score-panel > div:nth-of-type(5),
+.score-panel > div:nth-of-type(6) {
+    background: linear-gradient(135deg, rgba(124, 60, 255, 0.28), rgba(255, 79, 163, 0.2));
 }
 
 .score-label {
@@ -1505,6 +1510,18 @@ footer a {
     background: rgba(124, 60, 255, 0.08);
     color: var(--ink);
     font-weight: 800;
+}
+
+.free-culture-hero {
+    background:
+        radial-gradient(circle at 12% 14%, rgba(255, 79, 163, 0.18), transparent 34%),
+        radial-gradient(circle at 90% 8%, rgba(35, 215, 199, 0.22), transparent 32%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 250, 242, 0.9));
+}
+
+.free-culture-manifesto {
+    border-color: rgba(124, 60, 255, 0.18);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(255, 234, 246, 0.72));
 }
 
 .access-wall-actions {
