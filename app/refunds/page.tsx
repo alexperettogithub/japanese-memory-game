@@ -14,7 +14,7 @@ export default function RefundsPage() {
       </section>
       <section className="legal-card">
         <h2>Refund Requests</h2>
-        <p>Refund requests can be sent to <a href="mailto:info@zerosoftoworks.com">info@zerosoftoworks.com</a>. Include the account email, approximate payment date, subscription plan, and reason for the request. Refunds are assessed according to applicable mandatory consumer law, this policy, and the payment status reported by Stripe.</p>
+        <p>Refund requests can be sent to <a href="mailto:info@zerosoftworks.it">info@zerosoftworks.it</a>. Include the account email, approximate payment date, subscription plan, and reason for the request. Refunds are assessed according to applicable mandatory consumer law, this policy, and the payment status reported by Stripe.</p>
       </section>
       <section className="legal-card">
         <h2>EU Withdrawal Right</h2>
@@ -23,7 +23,7 @@ export default function RefundsPage() {
       </section>
       <section className="legal-card">
         <h2>Withdrawal Request</h2>
-        <p>To exercise a withdrawal right where applicable, contact <a href="mailto:info@zerosoftoworks.com">info@zerosoftoworks.com</a> with a clear statement that you withdraw from the Plus subscription purchase. You may use the following wording:</p>
+        <p>To exercise a withdrawal right where applicable, contact <a href="mailto:info@zerosoftworks.it">info@zerosoftworks.it</a> with a clear statement that you withdraw from the Plus subscription purchase. You may use the following wording:</p>
         <blockquote className="legal-quote">I hereby withdraw from my Japanese Memory Game Plus subscription purchase. Account email: [your email]. Purchase date: [date]. Name: [name].</blockquote>
       </section>
       <section className="legal-card">

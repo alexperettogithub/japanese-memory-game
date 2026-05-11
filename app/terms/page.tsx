@@ -10,7 +10,7 @@ export default function TermsPage() {
       </section>
       <section className="legal-card">
         <h2>Provider</h2>
-        <p>The service is provided by Zero Softworks di Peretto Alex, European VAT number IT04514000241. Contact: <a href="mailto:info@zerosoftoworks.com">info@zerosoftoworks.com</a>, telephone <a href="tel:+390424017669">+39 0424 017669</a>.</p>
+        <p>The service is provided by Zero Softworks di Peretto Alex, European VAT number IT04514000241. Contact: <a href="mailto:info@zerosoftworks.it">info@zerosoftworks.it</a>, telephone <a href="tel:+390424017669">+39 0424 017669</a>.</p>
         <p>Further business information is available in the <Link href="/legal">Legal Notice</Link>.</p>
       </section>
       <section className="legal-card">
@@ -38,7 +38,7 @@ export default function TermsPage() {
       </section>
       <section className="legal-card">
         <h2>Invoices</h2>
-        <p>Invoices are issued on request. To request an invoice, contact <a href="mailto:info@zerosoftoworks.com">info@zerosoftoworks.com</a> with the billing details required by Italian tax rules.</p>
+        <p>Invoices are issued on request. To request an invoice, contact <a href="mailto:info@zerosoftworks.it">info@zerosoftworks.it</a> with the billing details required by Italian tax rules.</p>
       </section>
       <section className="legal-card">
         <h2>Right of Withdrawal</h2>

@@ -14,7 +14,7 @@ export default function LegalNoticePage() {
         <dl className="legal-details">
           <div><dt>Trade name</dt><dd>Zero Softworks di Peretto Alex</dd></div>
           <div><dt>European VAT number</dt><dd>IT04514000241</dd></div>
-          <div><dt>Customer support, invoices, bugs, malfunctions</dt><dd><a href="mailto:info@zerosoftoworks.com">info@zerosoftoworks.com</a></dd></div>
+          <div><dt>Customer support, invoices, bugs, malfunctions</dt><dd><a href="mailto:info@zerosoftworks.it">info@zerosoftworks.it</a></dd></div>
           <div><dt>Telephone</dt><dd><a href="tel:+390424017669">+39 0424 017669</a></dd></div>
           <div><dt>Company register reference</dt><dd><a href="https://www.ufficiocamerale.it/3082/zero-softworks-di-peretto-alex" target="_blank" rel="noopener noreferrer">Ufficio Camerale public record</a></dd></div>
         </dl>

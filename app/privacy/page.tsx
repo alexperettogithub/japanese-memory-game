@@ -10,7 +10,7 @@ export default function PrivacyPage() {
       </section>
       <section className="legal-card">
         <h2>Data Controller</h2>
-        <p>The data controller is Zero Softworks di Peretto Alex, European VAT number IT04514000241. Contact: <a href="mailto:info@zerosoftoworks.com">info@zerosoftoworks.com</a>, telephone <a href="tel:+390424017669">+39 0424 017669</a>.</p>
+        <p>The data controller is Zero Softworks di Peretto Alex, European VAT number IT04514000241. Contact: <a href="mailto:info@zerosoftworks.it">info@zerosoftworks.it</a>, telephone <a href="tel:+390424017669">+39 0424 017669</a>.</p>
       </section>
       <section className="legal-card">
         <h2>Data Processed</h2>
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
       <section className="legal-card">
         <h2>User Rights</h2>
         <p>Users may request access, rectification, erasure, restriction, portability, or objection where applicable under GDPR. Users may also lodge a complaint with the Italian Data Protection Authority (Garante per la protezione dei dati personali) or another competent EU supervisory authority.</p>
-        <p>Requests can be sent to <a href="mailto:info@zerosoftoworks.com">info@zerosoftoworks.com</a>.</p>
+        <p>Requests can be sent to <a href="mailto:info@zerosoftworks.it">info@zerosoftworks.it</a>.</p>
       </section>
       <section className="legal-card">
         <h2>Children</h2>
