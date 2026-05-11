@@ -20,7 +20,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Legal acknowledgement required' }, { status: 400 });
   }
 
-  const env = getStripeEnv();
   const supabase = await createSupabaseServer();
   const { data } = await supabase.auth.getUser();
 
@@ -32,6 +31,7 @@ export async function POST(request: Request) {
     return rateLimitResponse();
   }
 
+  const env = getStripeEnv();
   const price = interval === 'yearly' ? env.stripePlusYearlyPriceId : env.stripePlusMonthlyPriceId;
   const origin = getConfiguredAppUrl();
   try {
