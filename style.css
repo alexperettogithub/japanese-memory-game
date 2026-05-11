@@ -1094,6 +1094,69 @@ input {
     display: none;
 }
 
+.leaderboard-publish {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(260px, 1.1fr);
+    gap: 1rem;
+    align-items: start;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 3px solid rgba(255, 255, 255, 0.72);
+    border-radius: 32px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(234, 249, 255, 0.82));
+    box-shadow: var(--soft-shadow);
+}
+
+.leaderboard-publish[hidden] {
+    display: none;
+}
+
+.leaderboard-publish h2 {
+    margin: 0.4rem 0;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+}
+
+.leaderboard-publish p {
+    color: var(--muted);
+    font-weight: 750;
+}
+
+.leaderboard-publish-form {
+    display: grid;
+    gap: 0.7rem;
+    padding: 1rem;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.leaderboard-publish-form > label:not(.checkout-consent) {
+    color: var(--muted);
+    font-weight: 900;
+}
+
+.leaderboard-publish-form input[type="text"] {
+    width: 100%;
+    min-height: 48px;
+    border: 2px solid rgba(32, 19, 53, 0.12);
+    border-radius: 16px;
+    padding: 0 0.9rem;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 800;
+}
+
+.leaderboard-publish-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+}
+
+.leaderboard-publish-actions a {
+    text-decoration: none;
+}
+
 .bonus-copy,
 .bonus-card {
     padding: clamp(1rem, 3vw, 1.5rem);
@@ -1524,6 +1587,76 @@ footer a {
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(255, 234, 246, 0.72));
 }
 
+.leaderboard-hero {
+    background:
+        radial-gradient(circle at 10% 12%, rgba(35, 215, 199, 0.22), transparent 32%),
+        radial-gradient(circle at 86% 12%, rgba(255, 79, 163, 0.18), transparent 30%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 250, 242, 0.9));
+}
+
+.leaderboard-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
+.leaderboard-controls label {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--muted);
+    font-weight: 900;
+}
+
+.leaderboard-controls label[hidden] {
+    display: none;
+}
+
+.leaderboard-controls select {
+    min-height: 48px;
+    border: 2px solid rgba(32, 19, 53, 0.12);
+    border-radius: 16px;
+    padding: 0 0.85rem;
+    background: rgba(255, 255, 255, 0.86);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 850;
+}
+
+.leaderboard-table-wrap {
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 0.85rem 0.7rem;
+    border-bottom: 1px solid rgba(32, 19, 53, 0.1);
+    text-align: left;
+}
+
+.leaderboard-table th {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.leaderboard-table td {
+    font-weight: 850;
+}
+
+.leaderboard-note {
+    margin-top: 0.8rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-weight: 750;
+}
+
 .access-wall-actions {
     display: grid;
     gap: 0.6rem;
@@ -1751,6 +1884,12 @@ footer a {
     }
 
     .bonus-level {
+        grid-template-columns: 1fr;
+    }
+
+    .leaderboard-publish,
+    .leaderboard-controls,
+    .leaderboard-publish-actions {
         grid-template-columns: 1fr;
     }
 

@@ -22,6 +22,7 @@ export default function PrivacyPage() {
           <li>Subscription data, such as Stripe customer, subscription, price, and status identifiers.</li>
           <li>Transactional email metadata needed to send sign-in, account, and subscription emails.</li>
           <li>Support data voluntarily sent by users by email or other contact channels.</li>
+          <li>Optional leaderboard data, only when a signed-in user chooses to publish it: public nickname, mode, grade, play type, score, solved cards, time, consent version, and publication timestamp.</li>
         </ul>
       </section>
       <section className="legal-card">
@@ -33,6 +34,7 @@ export default function PrivacyPage() {
           <li>Prevent abuse, protect security, and enforce anonymous usage limits: legitimate interest and service security.</li>
           <li>Respond to support, invoice, bug, and malfunction requests: performance of a contract, legal obligations, or legitimate interest depending on the request.</li>
           <li>Send transactional emails: performance of the service and legitimate interest in account/security communications.</li>
+          <li>Publish optional leaderboard results: explicit user choice/consent and performance of the requested leaderboard feature.</li>
         </ul>
         <p>The service does not use advertising networks, behavioral analytics, tracking pixels, or marketing profiling.</p>
       </section>
@@ -55,12 +57,14 @@ export default function PrivacyPage() {
           <li>Anonymous usage events are intended to be retained only for the operational window needed to enforce fair-use limits and diagnose abuse.</li>
           <li>Support communications are kept for the time needed to resolve the request and protect legal interests.</li>
           <li>Accounting and invoice-related data is retained for the period required by Italian law.</li>
+          <li>Leaderboard entries are retained while the user chooses to keep them public and can be removed from the game screen while signed in.</li>
         </ul>
       </section>
       <section className="legal-card">
         <h2>User Rights</h2>
         <p>Users may request access, rectification, erasure, restriction, portability, or objection where applicable under GDPR. Users may also lodge a complaint with the Italian Data Protection Authority (Garante per la protezione dei dati personali) or another competent EU supervisory authority.</p>
         <p>Requests can be sent to <a href="mailto:info@zerosoftworks.it">info@zerosoftworks.it</a>.</p>
+        <p>Leaderboard publication is optional. Users can remove their published leaderboard entries directly from the app while signed in, or request removal by contacting support.</p>
       </section>
       <section className="legal-card">
         <h2>Children</h2>

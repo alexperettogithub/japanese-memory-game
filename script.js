@@ -369,6 +369,7 @@ let elapsedSeconds = 0;
 let timerStartedAt = null;
 let timerInterval = null;
 let accountState = { loaded: false, authenticated: false, plus: false, admin: false, billingPortalAvailable: false };
+let lastCompletedResult = null;
 const anonymousFallbackUsage = { explore_card_used: 0, play_attempt: 0 };
 const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
@@ -1314,8 +1315,10 @@ function resetPlayState() {
     score = 0;
     answeredCards = new Set();
     bonusSolved = false;
+    lastCompletedResult = null;
     resetPlayTimer();
     document.querySelector('#bonus-level').hidden = !accountState.admin;
+    document.querySelector('#leaderboard-publish').hidden = true;
     document.querySelector('#taito-answer').value = '';
     document.querySelector('#taito-feedback').textContent = '';
 }
@@ -1323,6 +1326,15 @@ function resetPlayState() {
 function checkRoundCompletion() {
     if (appMode !== 'play' || playDeck.length === 0 || answeredCards.size < playDeck.length) return;
     stopPlayTimer();
+    lastCompletedResult = {
+        mode: currentMode,
+        playKind,
+        grade: currentMode === 'kanji' ? currentGrade : 0,
+        score,
+        solved: answeredCards.size,
+        total: playDeck.length,
+        timeSeconds: elapsedSeconds,
+    };
     savedStats.lastTimeSeconds = elapsedSeconds;
     savedStats.bestTimeSeconds = savedStats.bestTimeSeconds == null
         ? elapsedSeconds
@@ -1332,7 +1344,79 @@ function checkRoundCompletion() {
     saveStats();
     updateScorePanel();
     document.querySelector('#bonus-level').hidden = false;
+    document.querySelector('#leaderboard-publish').hidden = false;
     document.querySelector('#taito-answer').focus();
+}
+
+async function publishLeaderboardResult() {
+    const feedback = document.querySelector('#leaderboard-feedback');
+    const nameInput = document.querySelector('#leaderboard-name');
+    const consent = document.querySelector('#leaderboard-consent');
+    const button = document.querySelector('#leaderboard-submit');
+    if (feedback) feedback.textContent = '';
+
+    if (!accountState.authenticated) {
+        showAccessWall('auth');
+        return;
+    }
+    if (!lastCompletedResult) {
+        if (feedback) feedback.textContent = 'Complete a Play round before publishing a result.';
+        return;
+    }
+    if (!consent?.checked) {
+        if (feedback) feedback.textContent = 'Please opt in before publishing this result.';
+        return;
+    }
+
+    button.disabled = true;
+    try {
+        const response = await fetch('/api/leaderboard', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ...lastCompletedResult,
+                displayName: nameInput?.value || '',
+                publishConsent: true,
+                consentVersion: 'leaderboard-2026-05-11',
+            }),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            if (feedback) feedback.textContent = result.error || 'Unable to publish result.';
+            return;
+        }
+        if (feedback) feedback.textContent = 'Result published. Thank you for choosing to share it.';
+    } catch {
+        if (feedback) feedback.textContent = 'Unable to publish result.';
+    } finally {
+        button.disabled = false;
+    }
+}
+
+async function removeLeaderboardEntries() {
+    const feedback = document.querySelector('#leaderboard-feedback');
+    const button = document.querySelector('#leaderboard-remove');
+    if (feedback) feedback.textContent = '';
+    if (!accountState.authenticated) {
+        showAccessWall('auth');
+        return;
+    }
+    if (!window.confirm('Remove your published leaderboard entries?')) return;
+
+    button.disabled = true;
+    try {
+        const response = await fetch('/api/leaderboard', { method: 'DELETE' });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            if (feedback) feedback.textContent = result.error || 'Unable to remove leaderboard entries.';
+            return;
+        }
+        if (feedback) feedback.textContent = 'Your leaderboard entries were removed.';
+    } catch {
+        if (feedback) feedback.textContent = 'Unable to remove leaderboard entries.';
+    } finally {
+        button.disabled = false;
+    }
 }
 
 function initGame({ shuffle = true } = {}) {
@@ -1529,3 +1613,5 @@ document.querySelector('#account-subscribe')?.addEventListener('click', showSubs
 document.querySelector('#account-portal')?.addEventListener('click', startPortal);
 document.querySelector('#account-signout')?.addEventListener('click', signOut);
 document.querySelector('#account-delete')?.addEventListener('click', deleteAccount);
+document.querySelector('#leaderboard-submit')?.addEventListener('click', publishLeaderboardResult);
+document.querySelector('#leaderboard-remove')?.addEventListener('click', removeLeaderboardEntries);

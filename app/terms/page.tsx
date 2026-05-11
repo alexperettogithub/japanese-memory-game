@@ -47,6 +47,7 @@ export default function TermsPage() {
       <section className="legal-card">
         <h2>Acceptable Use</h2>
         <p>Users must not misuse the service, attempt to bypass access controls, overload infrastructure, reverse engineer private service endpoints for abuse, upload malicious data, interfere with other users, or use the service unlawfully.</p>
+        <p>If a user chooses to publish leaderboard results, the public nickname must not impersonate others, include unlawful or abusive content, reveal another person's personal data, or violate third-party rights. Zero Softworks may remove leaderboard entries that appear abusive, unlawful, misleading, or technically invalid.</p>
       </section>
       <section className="legal-card">
         <h2>Availability and Changes</h2>

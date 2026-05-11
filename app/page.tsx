@@ -177,6 +177,24 @@ export default function Home() {
                 <p className="answer-feedback" id="taito-feedback"></p>
               </div>
             </section>
+            <section className="leaderboard-publish" id="leaderboard-publish" hidden aria-live="polite">
+              <div>
+                <span className="card-label">Optional leaderboard</span>
+                <h2>Share this run?</h2>
+                <p>Publish your result with a public nickname. Your email is never shown, and you can remove your leaderboard entries anytime.</p>
+              </div>
+              <div className="leaderboard-publish-form">
+                <label htmlFor="leaderboard-name">Public nickname</label>
+                <input id="leaderboard-name" type="text" maxLength={24} autoComplete="nickname" placeholder="Memory learner" />
+                <label className="checkout-consent leaderboard-consent"><input id="leaderboard-consent" type="checkbox" /><span>I choose to publish this result publicly and understand that my nickname, score, solved cards, mode, grade, and time will be visible on the leaderboard.</span></label>
+                <div className="leaderboard-publish-actions">
+                  <button className="access-wall-primary" id="leaderboard-submit" type="button">Publish result</button>
+                  <button className="access-wall-secondary" id="leaderboard-remove" type="button">Remove my entries</button>
+                  <a className="access-wall-secondary" href="/leaderboard">View leaderboard</a>
+                </div>
+                <p className="answer-feedback" id="leaderboard-feedback"></p>
+              </div>
+            </section>
           </div>
         </div>
         <footer>
@@ -188,6 +206,7 @@ export default function Home() {
             <a href="/cookies">Cookies</a>
             <a href="/refunds">Refunds</a>
             <a href="/free-culture">Free Culture</a>
+            <a href="/leaderboard">Leaderboard</a>
           </nav>
         </footer>
       </div>
