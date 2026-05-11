@@ -1167,7 +1167,8 @@ function createCard(data) {
         addPlayControls(card, cardFront, data);
     } else {
         card.addEventListener('click', async () => {
-            if (!await requestUsage('explore_card_used')) return;
+            card.classList.toggle('flipped');
+            if (await requestUsage('explore_card_used')) return;
             card.classList.toggle('flipped');
         });
     }
@@ -1488,6 +1489,8 @@ document.querySelector('#taito-submit').addEventListener('click', () => {
 });
 
 document.querySelector('#access-wall-close')?.addEventListener('click', hideAccessWall);
+document.querySelector('#access-wall-dismiss')?.addEventListener('click', hideAccessWall);
+document.querySelector('#plus-wall-close')?.addEventListener('click', hideAccessWall);
 document.querySelector('#access-wall')?.addEventListener('click', event => {
     if (event.target === event.currentTarget) hideAccessWall();
 });

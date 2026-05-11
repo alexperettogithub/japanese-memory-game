@@ -58,6 +58,7 @@ export default function Home() {
       </div>
       <div className="access-wall" id="access-wall" hidden role="dialog" aria-modal="true" aria-labelledby="access-wall-title">
         <div className="access-wall-card">
+          <button className="access-wall-dismiss" id="access-wall-dismiss" type="button" aria-label="Close dialog">×</button>
           <span className="card-label" id="access-wall-label">Keep learning</span>
           <h2 id="access-wall-title">Sign in to continue</h2>
           <p id="access-wall-copy">Sign in if you already have an account, or create a free account to keep playing with no limits in Explore Mode.</p>
@@ -68,10 +69,11 @@ export default function Home() {
           </div>
           <div className="access-wall-actions" id="plus-actions" hidden>
             <p className="checkout-legal-summary">Plus renews automatically until cancelled. Applicable taxes and the final amount payable are shown in Stripe Checkout before payment confirmation.</p>
-            <label className="checkout-consent"><input id="checkout-terms-consent" type="checkbox" /> I accept the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>, <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and <a href="/refunds" target="_blank" rel="noopener noreferrer">Refunds and Withdrawal Policy</a>.</label>
-            <label className="checkout-consent"><input id="checkout-immediate-access-consent" type="checkbox" /> I request immediate Plus access and acknowledge the withdrawal information for digital services/content.</label>
+            <label className="checkout-consent"><input id="checkout-terms-consent" type="checkbox" /><span>I accept the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>, <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and <a href="/refunds" target="_blank" rel="noopener noreferrer">Refunds and Withdrawal Policy</a>.</span></label>
+            <label className="checkout-consent"><input id="checkout-immediate-access-consent" type="checkbox" /><span>I request immediate Plus access and acknowledge the withdrawal information for digital services/content.</span></label>
             <button className="access-wall-primary" id="checkout-yearly" type="button">Subscribe and pay €30/year</button>
             <button className="access-wall-secondary" id="checkout-monthly" type="button">Subscribe and pay €5/month</button>
+            <button className="access-wall-secondary" id="plus-wall-close" type="button">Not now</button>
           </div>
           <p className="access-wall-feedback" id="checkout-feedback" aria-live="polite"></p>
         </div>
