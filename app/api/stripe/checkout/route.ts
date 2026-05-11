@@ -12,9 +12,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid origin' }, { status: 403 });
   }
 
-  const { interval } = await request.json().catch(() => ({ interval: 'monthly' }));
+  const { interval, acceptedTerms, acceptedImmediateAccess } = await request.json().catch(() => ({ interval: 'monthly' }));
   if (interval !== 'monthly' && interval !== 'yearly') {
     return NextResponse.json({ error: 'Invalid interval' }, { status: 400 });
+  }
+  if (acceptedTerms !== true || acceptedImmediateAccess !== true) {
+    return NextResponse.json({ error: 'Legal acknowledgement required' }, { status: 400 });
   }
 
   const env = getStripeEnv();
@@ -42,6 +45,9 @@ export async function POST(request: Request) {
         metadata: {
           user_id: data.user.id,
           product: 'japanese_memory_game_plus',
+          terms_version: '2026-05-11',
+          privacy_version: '2026-05-11',
+          immediate_access_acknowledged: 'true',
         },
       },
       success_url: `${origin}/?checkout=success`,
@@ -49,6 +55,9 @@ export async function POST(request: Request) {
       metadata: {
         user_id: data.user.id,
         product: 'japanese_memory_game_plus',
+        terms_version: '2026-05-11',
+        privacy_version: '2026-05-11',
+        immediate_access_acknowledged: 'true',
       },
     });
 

@@ -33,7 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         <section className="site-storage-notice" id="site-storage-notice" aria-label="Privacy and storage notice">
           <div>
             <span className="card-label">Privacy</span>
-            <p>We use essential cookies for sign-in, anonymous play limits, and security. We also use local storage for your game score. No ads, no analytics, no tracking pixels.</p>
+            <p>We use essential cookies for sign-in, anonymous play limits, and security. We also use local storage for your game score. No ads, no analytics, no tracking pixels. See our <a href="/cookies">Cookie and Storage Policy</a>.</p>
           </div>
           <button className="access-wall-primary" id="site-storage-accept" type="button">OK, continue</button>
         </section>

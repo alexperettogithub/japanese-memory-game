@@ -567,15 +567,26 @@ function hideAccessWall() {
 async function startCheckout(interval) {
     const checkoutFeedback = document.querySelector('#checkout-feedback');
     const buttons = document.querySelectorAll('#checkout-monthly, #checkout-yearly');
+    const termsConsent = document.querySelector('#checkout-terms-consent');
+    const immediateAccessConsent = document.querySelector('#checkout-immediate-access-consent');
 
     if (checkoutFeedback) checkoutFeedback.textContent = '';
+    if (!termsConsent?.checked || !immediateAccessConsent?.checked) {
+        if (checkoutFeedback) checkoutFeedback.textContent = 'Please accept the legal terms and immediate access acknowledgement before checkout.';
+        return;
+    }
+
     buttons.forEach(button => { button.disabled = true; });
 
     try {
         const response = await fetch('/api/stripe/checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ interval })
+            body: JSON.stringify({
+                interval,
+                acceptedTerms: true,
+                acceptedImmediateAccess: true,
+            })
         });
 
         if (response.status === 401) {

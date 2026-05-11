@@ -67,8 +67,11 @@ export default function Home() {
             <button className="access-wall-secondary" id="access-wall-close" type="button">Not now</button>
           </div>
           <div className="access-wall-actions" id="plus-actions" hidden>
-            <button className="access-wall-primary" id="checkout-yearly" type="button">Plus yearly · €30/year</button>
-            <button className="access-wall-secondary" id="checkout-monthly" type="button">Plus monthly · €5/month</button>
+            <p className="checkout-legal-summary">Plus renews automatically until cancelled. Applicable taxes and the final amount payable are shown in Stripe Checkout before payment confirmation.</p>
+            <label className="checkout-consent"><input id="checkout-terms-consent" type="checkbox" /> I accept the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>, <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and <a href="/refunds" target="_blank" rel="noopener noreferrer">Refunds and Withdrawal Policy</a>.</label>
+            <label className="checkout-consent"><input id="checkout-immediate-access-consent" type="checkbox" /> I request immediate Plus access and acknowledge the withdrawal information for digital services/content.</label>
+            <button className="access-wall-primary" id="checkout-yearly" type="button">Subscribe and pay €30/year</button>
+            <button className="access-wall-secondary" id="checkout-monthly" type="button">Subscribe and pay €5/month</button>
           </div>
           <p className="access-wall-feedback" id="checkout-feedback" aria-live="polite"></p>
         </div>
@@ -168,6 +171,13 @@ export default function Home() {
         </div>
         <footer>
           <p>Copyleft <span className="rotated">©</span> <span id="current-year">2026</span> <a href="https://www.zerosoftworks.it" target="_blank" rel="noopener noreferrer">Zero Softworks</a></p>
+          <nav className="legal-footer-links" aria-label="Legal links">
+            <a href="/legal">Legal Notice</a>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/cookies">Cookies</a>
+            <a href="/refunds">Refunds</a>
+          </nav>
         </footer>
       </div>
       <Script src="/kanji-data.js" strategy="beforeInteractive" />
