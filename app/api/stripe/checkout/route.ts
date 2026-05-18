@@ -2,8 +2,17 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createStripe } from '@/lib/stripe';
 import { createSupabaseServer } from '@/lib/supabase-server';
-import { getStripeEnv } from '@/lib/env';
+import { getStripeCheckoutEnv } from '@/lib/env';
 import { assertAllowedOrigin, checkRateLimit, getConfiguredAppUrl, getRateLimitKey, rateLimitResponse } from '@/lib/security';
+
+function getStripeErrorMeta(error: unknown) {
+  if (!error || typeof error !== 'object') return { type: 'unknown' };
+  return {
+    type: 'type' in error && typeof error.type === 'string' ? error.type : 'unknown',
+    code: 'code' in error && typeof error.code === 'string' ? error.code : 'unknown',
+    statusCode: 'statusCode' in error && typeof error.statusCode === 'number' ? error.statusCode : undefined,
+  };
+}
 
 export async function POST(request: Request) {
   try {
@@ -31,11 +40,11 @@ export async function POST(request: Request) {
     return rateLimitResponse();
   }
 
-  const env = getStripeEnv();
-  const price = interval === 'yearly' ? env.stripePlusYearlyPriceId : env.stripePlusMonthlyPriceId;
-  const origin = getConfiguredAppUrl();
   try {
-    const stripe = createStripe();
+    const env = getStripeCheckoutEnv();
+    const price = interval === 'yearly' ? env.stripePlusYearlyPriceId : env.stripePlusMonthlyPriceId;
+    const origin = getConfiguredAppUrl();
+    const stripe = createStripe(env.stripeSecretKey);
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       customer_email: data.user.email,
@@ -63,6 +72,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
+    console.error('stripe.checkout.failed', getStripeErrorMeta(error));
     if (error instanceof Stripe.errors.StripeError) {
       return NextResponse.json({ error: 'Checkout is unavailable right now.' }, { status: 502 });
     }

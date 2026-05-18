@@ -37,8 +37,20 @@ export function getUsageEnv() {
 
 export function getStripeEnv() {
   return {
-    stripeSecretKey: requireEnv('STRIPE_SECRET_KEY'),
+    ...getStripeCheckoutEnv(),
     stripeWebhookSecret: requireEnv('STRIPE_WEBHOOK_SECRET'),
+  };
+}
+
+export function getStripeSecretEnv() {
+  return {
+    stripeSecretKey: requireEnv('STRIPE_SECRET_KEY'),
+  };
+}
+
+export function getStripeCheckoutEnv() {
+  return {
+    ...getStripeSecretEnv(),
     ...getStripePriceEnv(),
   };
 }

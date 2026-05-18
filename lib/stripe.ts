@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
-import { getStripeEnv } from './env';
+import { getStripeSecretEnv } from './env';
 
-export function createStripe() {
-  return new Stripe(getStripeEnv().stripeSecretKey);
+export function createStripe(secretKey = getStripeSecretEnv().stripeSecretKey) {
+  return new Stripe(secretKey);
 }

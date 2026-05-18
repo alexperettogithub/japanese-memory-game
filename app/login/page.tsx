@@ -6,6 +6,16 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const error = typeof params.error === 'string' ? params.error : null;
   const mode = params.mode === 'signup' ? 'signup' : 'signin';
   const isSignUp = mode === 'signup';
+  const checkoutResume = params.checkout === 'resume';
+  const checkoutInterval = params.interval === 'monthly' || params.interval === 'yearly' ? params.interval : null;
+  const buildModeHref = (nextMode: 'signin' | 'signup') => {
+    const query = new URLSearchParams({ mode: nextMode });
+    if (checkoutResume) {
+      query.set('checkout', 'resume');
+      if (checkoutInterval) query.set('interval', checkoutInterval);
+    }
+    return `/login?${query.toString()}`;
+  };
   const errorMessage = error === 'account-not-found'
     ? 'No account was found for that email yet. Create a free account to continue.'
     : isSignUp
@@ -18,10 +28,10 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       <section className="auth-card">
         <span className="card-label">Japanese Memory Game Plus</span>
         <h1>{isSignUp ? 'Sign up' : 'Sign in'}</h1>
-        <p>{isSignUp ? 'Create a free account to keep learning after the daily anonymous limit.' : 'Welcome back. Enter your email and we will send you a magic link.'}</p>
+        <p>{checkoutResume ? 'Use a magic link to continue to Plus checkout.' : isSignUp ? 'Create a free account to keep learning after the daily anonymous limit.' : 'Welcome back. Enter your email and we will send you a magic link.'}</p>
         <div className="auth-mode-switch" aria-label="Authentication mode">
-          <a className={!isSignUp ? 'active' : ''} href="/login?mode=signin">Sign in</a>
-          <a className={isSignUp ? 'active' : ''} href="/login?mode=signup">Sign up</a>
+          <a className={!isSignUp ? 'active' : ''} href={buildModeHref('signin')}>Sign in</a>
+          <a className={isSignUp ? 'active' : ''} href={buildModeHref('signup')}>Sign up</a>
         </div>
         {sent ? (
           <div className="auth-success-card" role="status" aria-live="polite">
@@ -33,6 +43,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         {error ? <p className="auth-error">{errorMessage}</p> : null}
         <form action="/auth/sign-in" method="post" className="auth-form">
           <input type="hidden" name="intent" value={mode} />
+          {checkoutResume ? <input type="hidden" name="checkout" value="resume" /> : null}
+          {checkoutInterval ? <input type="hidden" name="checkoutInterval" value={checkoutInterval} /> : null}
           {isSignUp ? (
             <>
               <label htmlFor="first-name">First name</label>

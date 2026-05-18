@@ -375,6 +375,83 @@ const anonymousFallbackLimits = { explore_card_used: 15, play_attempt: 5 };
 const kanjiGradeCounts = { 1: 80, 2: 160, 3: 200, 4: 202, 5: 193, 6: 191 };
 const advancedKanjiCache = new Map();
 const storageNoticeKey = 'jmg_storage_notice=1';
+const pendingCheckoutKey = 'jmg-pending-checkout';
+let resumeCheckoutRequested = false;
+
+function normalizeCheckoutInterval(value) {
+    return value === 'monthly' || value === 'yearly' ? value : null;
+}
+
+function discardPendingCheckout() {
+    try {
+        window.localStorage.removeItem(pendingCheckoutKey);
+    } catch (error) {
+        // Checkout resume is best-effort and never required for access.
+    }
+}
+
+function readPendingCheckout() {
+    try {
+        const raw = window.localStorage.getItem(pendingCheckoutKey);
+        if (!raw) return null;
+
+        const pending = JSON.parse(raw);
+        const interval = normalizeCheckoutInterval(pending?.interval);
+        const createdAt = Number(pending?.createdAt || 0);
+        const acceptedTerms = pending?.acceptedTerms === true;
+        const acceptedImmediateAccess = pending?.acceptedImmediateAccess === true;
+        if (!interval || !acceptedTerms || !acceptedImmediateAccess || Date.now() - createdAt > 30 * 60 * 1000) {
+            discardPendingCheckout();
+            return null;
+        }
+
+        return { interval, acceptedTerms, acceptedImmediateAccess };
+    } catch (error) {
+        discardPendingCheckout();
+        return null;
+    }
+}
+
+function buildLoginHref(mode, pending = readPendingCheckout()) {
+    const params = new URLSearchParams({ mode });
+    if (pending) {
+        params.set('checkout', 'resume');
+        params.set('interval', pending.interval);
+    }
+    return `/login?${params.toString()}`;
+}
+
+function syncCheckoutLoginLinks() {
+    const pending = readPendingCheckout();
+    document.querySelectorAll('a[href^="/login?mode=signin"]').forEach(link => {
+        link.setAttribute('href', buildLoginHref('signin', pending));
+    });
+    document.querySelectorAll('a[href^="/login?mode=signup"]').forEach(link => {
+        link.setAttribute('href', buildLoginHref('signup', pending));
+    });
+}
+
+function savePendingCheckout(interval) {
+    const normalizedInterval = normalizeCheckoutInterval(interval);
+    if (!normalizedInterval) return;
+
+    try {
+        window.localStorage.setItem(pendingCheckoutKey, JSON.stringify({
+            interval: normalizedInterval,
+            acceptedTerms: true,
+            acceptedImmediateAccess: true,
+            createdAt: Date.now(),
+        }));
+    } catch (error) {
+        // If storage is unavailable, the user can still retry checkout manually.
+    }
+    syncCheckoutLoginLinks();
+}
+
+function clearPendingCheckout() {
+    discardPendingCheckout();
+    syncCheckoutLoginLinks();
+}
 
 function updateModeClass() {
     document.documentElement.classList.toggle('kanji-mode', currentMode === 'kanji');
@@ -542,6 +619,7 @@ function showAccessWall(kind) {
     if (!wall || !label || !title || !copy || !authActions || !plusActions) return;
 
     if (checkoutFeedback) checkoutFeedback.textContent = '';
+    syncCheckoutLoginLinks();
 
     if (kind === 'plus') {
         label.textContent = 'Japanese Memory Game Plus';
@@ -550,9 +628,12 @@ function showAccessWall(kind) {
         authActions.hidden = true;
         plusActions.hidden = false;
     } else {
+        const pendingCheckout = readPendingCheckout();
         label.textContent = 'Keep learning';
         title.textContent = 'Sign in to continue';
-        copy.textContent = 'Sign in if you already have an account, or create a free account to keep playing with no limits in Explore Mode.';
+        copy.textContent = pendingCheckout
+            ? 'Sign in if you already have an account, or create a free account to finish Plus checkout.'
+            : 'Sign in if you already have an account, or create a free account to keep playing with no limits in Explore Mode.';
         authActions.hidden = false;
         plusActions.hidden = true;
     }
@@ -563,6 +644,7 @@ function showAccessWall(kind) {
 function hideAccessWall() {
     const wall = document.querySelector('#access-wall');
     if (wall) wall.hidden = true;
+    clearPendingCheckout();
 }
 
 async function startCheckout(interval) {
@@ -577,6 +659,7 @@ async function startCheckout(interval) {
         return;
     }
 
+    savePendingCheckout(interval);
     buttons.forEach(button => { button.disabled = true; });
 
     try {
@@ -597,14 +680,17 @@ async function startCheckout(interval) {
 
         const result = await response.json().catch(() => ({}));
         if (!response.ok || !result.url) {
+            clearPendingCheckout();
             if (checkoutFeedback) {
                 checkoutFeedback.textContent = result.error || 'Checkout is unavailable right now. Please try again in a moment.';
             }
             return;
         }
 
+        clearPendingCheckout();
         window.location.href = result.url;
     } catch (error) {
+        clearPendingCheckout();
         if (checkoutFeedback) {
             checkoutFeedback.textContent = 'Checkout is unavailable right now. Please try again in a moment.';
         }
@@ -799,10 +885,17 @@ function hideThanksPopup() {
 
 function handlePageMessages() {
     const params = new URLSearchParams(window.location.search);
+    if (params.get('checkout') === 'resume') resumeCheckoutRequested = true;
     if (params.get('welcome') === 'signup') showThanksPopup('signup');
     if (params.get('welcome') === 'signin') showThanksPopup('signin');
-    if (params.get('checkout') === 'success') showThanksPopup('subscribe');
-    if (params.get('checkout') === 'cancelled') showThanksPopup('checkout-cancelled');
+    if (params.get('checkout') === 'success') {
+        clearPendingCheckout();
+        showThanksPopup('subscribe');
+    }
+    if (params.get('checkout') === 'cancelled') {
+        clearPendingCheckout();
+        showThanksPopup('checkout-cancelled');
+    }
     if (params.get('account') === 'deleted') showThanksPopup('deleted');
     if (params.get('auth') === 'signed-out') showThanksPopup('signout');
     if (params.get('billing') === 'updated') showThanksPopup('billing');
@@ -811,6 +904,32 @@ function handlePageMessages() {
         const cleanUrl = `${window.location.pathname}${window.location.hash}`;
         window.history.replaceState({}, '', cleanUrl);
     }
+}
+
+function resumePendingCheckoutIfReady() {
+    const pendingCheckout = readPendingCheckout();
+    if (!pendingCheckout && !resumeCheckoutRequested) return;
+    if (!accountState.authenticated) return;
+
+    resumeCheckoutRequested = false;
+    if (accountState.plus || accountState.admin) {
+        clearPendingCheckout();
+        return;
+    }
+
+    showAccessWall('plus');
+    const checkoutFeedback = document.querySelector('#checkout-feedback');
+    if (!pendingCheckout) {
+        if (checkoutFeedback) checkoutFeedback.textContent = 'Choose a plan to finish Plus checkout.';
+        return;
+    }
+
+    const termsConsent = document.querySelector('#checkout-terms-consent');
+    const immediateAccessConsent = document.querySelector('#checkout-immediate-access-consent');
+    if (termsConsent) termsConsent.checked = true;
+    if (immediateAccessConsent) immediateAccessConsent.checked = true;
+    if (checkoutFeedback) checkoutFeedback.textContent = 'Opening secure checkout...';
+    window.setTimeout(() => startCheckout(pendingCheckout.interval), 0);
 }
 
 function getScrollOffset() {
@@ -1452,7 +1571,8 @@ updateGradeLabels();
 updateGradeVisibility();
 updateScorePanel();
 updateStorageNotice();
-updateAccountPanel();
+syncCheckoutLoginLinks();
+updateAccountPanel().then(resumePendingCheckoutIfReady);
 handlePageMessages();
 initGame();
 
