@@ -11,7 +11,8 @@ export default function CookiesPage() {
       </section>
       <section className="legal-card">
         <h2>No Advertising or Profiling Cookies</h2>
-        <p>Japanese Memory Game does not use advertising cookies, behavioral analytics, tracking pixels, or cross-site profiling. The storage listed below is used only to provide the service, keep users signed in, enforce anonymous limits, remember the storage notice, and save local score statistics.</p>
+        <p>Japanese Memory Game does not use advertising cookies, behavioral profiling, tracking pixels, or cross-site profiling. The storage listed below is used only to provide the service, keep users signed in, enforce anonymous limits, remember the storage notice, and save local score statistics.</p>
+        <p>The app also uses Umami for aggregate privacy-friendly analytics. Umami is loaded from <code>cloud.umami.is</code>, respects Do Not Track, and is not used for advertising or cross-site profiling.</p>
       </section>
       <section className="legal-card">
         <h2>Storage Used</h2>
@@ -20,6 +21,7 @@ export default function CookiesPage() {
           <div><dt>Supabase authentication cookies</dt><dd>Technical cookies used to keep signed-in users authenticated. Duration depends on authentication session settings.</dd></div>
           <div><dt>jmg_storage_notice</dt><dd>Technical first-party cookie used to remember that the storage notice was acknowledged. Duration: about 180 days.</dd></div>
           <div><dt>jmg-score-stats</dt><dd>LocalStorage entry used to keep local score and progress statistics in the user's browser until deleted by the user/browser.</dd></div>
+          <div><dt>Umami analytics</dt><dd>Aggregate privacy-friendly analytics request sent to Umami Cloud. No advertising cookies are set by Japanese Memory Game for this purpose.</dd></div>
         </dl>
       </section>
       <section className="legal-card">

@@ -25,6 +25,7 @@ export default function PrivacyPage() {
           <li>Transactional email metadata needed to send sign-in, account, and subscription emails.</li>
           <li>Support data voluntarily sent by users by email or other contact channels.</li>
           <li>Optional leaderboard data, only when a signed-in user chooses to publish it: public nickname, mode, grade, play type, score, solved cards, time, consent version, and publication timestamp.</li>
+          <li>Aggregate website analytics processed through Umami, such as page views, referrers, browser/device type, and country-level traffic information, without publishing user identities.</li>
         </ul>
       </section>
       <section className="legal-card">
@@ -37,8 +38,9 @@ export default function PrivacyPage() {
           <li>Respond to support, invoice, bug, and malfunction requests: performance of a contract, legal obligations, or legitimate interest depending on the request.</li>
           <li>Send transactional emails: performance of the service and legitimate interest in account/security communications.</li>
           <li>Publish optional leaderboard results: explicit user choice/consent and performance of the requested leaderboard feature.</li>
+          <li>Measure aggregate usage and improve the service through privacy-friendly analytics: legitimate interest in understanding site performance and usage without advertising or profiling.</li>
         </ul>
-        <p>The service does not use advertising networks, behavioral analytics, tracking pixels, or marketing profiling.</p>
+        <p>The service does not use advertising networks, behavioral analytics, tracking pixels, or marketing profiling. Umami is used for aggregate privacy-friendly analytics and is configured to respect Do Not Track.</p>
       </section>
       <section className="legal-card">
         <h2>Processors and Third Parties</h2>
@@ -48,6 +50,7 @@ export default function PrivacyPage() {
           <li>Supabase for authentication and database services.</li>
           <li>Stripe for payments, subscriptions, invoices/receipts, and billing portal.</li>
           <li>Resend for transactional email delivery.</li>
+          <li>Umami for aggregate privacy-friendly analytics.</li>
         </ul>
         <p>These providers may process data outside the European Economic Area under their applicable transfer mechanisms, such as Standard Contractual Clauses, adequacy decisions, or other lawful safeguards.</p>
       </section>

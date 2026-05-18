@@ -25,7 +25,7 @@ Japanese Memory Game is designed to expose only what the browser needs in order 
 
 ## Privacy And Data Minimization
 
-The app avoids advertising, analytics platforms, tracking pixels, and surveillance-based monetization.
+The app avoids advertising, tracking pixels, and surveillance-based monetization. It uses Umami only for aggregate privacy-friendly analytics.
 
 Anonymous usage limits rely on technical identifiers and hashed network-derived signals. Signed-in features use account and subscription data only as needed to provide the service. See [PRIVACY.md](PRIVACY.md) for the public privacy description.
 

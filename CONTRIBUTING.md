@@ -44,7 +44,7 @@ npm run build
 
 ## Privacy And Security Expectations
 
-Contributions should not introduce advertising trackers, behavioral analytics, unnecessary third-party scripts, or avoidable personal-data collection.
+Contributions should not introduce advertising trackers, behavioral analytics, unnecessary third-party scripts, or avoidable personal-data collection. Aggregate privacy-friendly analytics should remain limited to the project's approved Umami integration.
 
 Security-sensitive logic should be handled server-side where appropriate. Public browser code should not be trusted to enforce paid access, account permissions, or private data protection.
 

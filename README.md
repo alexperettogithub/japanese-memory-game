@@ -39,9 +39,9 @@ Japanese Memory Game is designed to remain useful without payment or tracking-ba
 
 ## Privacy Position
 
-The app does not use advertising, analytics platforms, tracking pixels, or surveillance-based monetization.
+The app does not use advertising, tracking pixels, or surveillance-based monetization. It uses Umami for aggregate privacy-friendly analytics so the project can understand basic usage without advertising profiling.
 
-Only technical data needed to operate the app is used: sign-in session cookies, anonymous usage-limit cookies, local score storage, account data for signed-in users, payment status for subscribers, and transactional email delivery. See [PRIVACY.md](PRIVACY.md).
+Only technical data needed to operate the app is used: sign-in session cookies, anonymous usage-limit cookies, local score storage, account data for signed-in users, optional leaderboard data, payment status for subscribers, aggregate analytics, and transactional email delivery. See [PRIVACY.md](PRIVACY.md).
 
 ## Free Software And Infrastructure
 

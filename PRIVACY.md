@@ -2,7 +2,7 @@
 
 Japanese Memory Game is built as a learning app, not as a data business.
 
-The hosted app does not use advertising networks, behavioral analytics platforms, tracking pixels, or cross-site profiling. Data is used only where it is needed to provide the learning experience, operate accounts, enforce fair access limits, process subscriptions, and send transactional emails.
+The hosted app does not use advertising networks, tracking pixels, or cross-site profiling. It uses Umami for aggregate privacy-friendly analytics. Data is used only where it is needed to provide the learning experience, operate accounts, enforce fair access limits, process subscriptions, publish optional leaderboard results, understand aggregate usage, and send transactional emails.
 
 ## Data Used By The App
 
@@ -14,6 +14,8 @@ The app may use the following categories of data:
 - Local game data: score and progress statistics stored in the user's browser with localStorage.
 - Subscription data: Stripe customer, subscription, price, and status identifiers needed to determine Plus access.
 - Transactional email data: email address and message metadata needed to send sign-in, account, and subscription-related emails.
+- Optional leaderboard data: public nickname, mode, grade, play type, score, solved cards, time, consent version, and publication timestamp when a signed-in user chooses to publish a result.
+- Aggregate analytics data: page views and basic usage information processed through Umami without advertising profiling.
 
 ## Cookies And Local Storage
 
@@ -25,6 +27,8 @@ Japanese Memory Game uses limited technical browser storage:
 - `jmg-score-stats`: localStorage entry for local score statistics.
 
 These are not advertising cookies and are not used for behavioral profiling.
+
+The app loads Umami from `cloud.umami.is` for aggregate privacy-friendly analytics. Umami is not used for advertising or cross-site profiling.
 
 ## Payments
 
@@ -46,6 +50,6 @@ Users may request account deletion through the app. If a Plus subscription is ac
 
 ## Third-Party Services
 
-The hosted app currently uses managed services for hosting, authentication/database, payments, and transactional email. These services are used to operate the product; they are not added for advertising or surveillance.
+The hosted app currently uses managed services for hosting, authentication/database, payments, aggregate analytics, and transactional email. These services are used to operate and improve the product; they are not added for advertising or surveillance.
 
 The source code remains free software, and reducing infrastructure lock-in is part of the long-term roadmap.
