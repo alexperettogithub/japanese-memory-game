@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   try {
     session = await stripe.billingPortal.sessions.create({
       customer: subscription.stripe_customer_id,
-      return_url: `${origin}/?billing=updated`,
+      return_url: `${origin}/play?billing=updated`,
     });
   } catch (error) {
     console.error('billing.portal.failed', {

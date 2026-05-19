@@ -59,8 +59,8 @@ export async function POST(request: Request) {
           immediate_access_acknowledged: 'true',
         },
       },
-      success_url: `${origin}/?checkout=success`,
-      cancel_url: `${origin}/?checkout=cancelled`,
+      success_url: `${origin}/play?checkout=success`,
+      cancel_url: `${origin}/play?checkout=cancelled`,
       metadata: {
         user_id: data.user.id,
         product: 'japanese_memory_game_plus',

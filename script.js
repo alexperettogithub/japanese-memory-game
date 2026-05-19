@@ -722,7 +722,7 @@ async function startPortal() {
 
 async function signOut() {
     await fetch('/auth/sign-out', { method: 'POST' }).catch(() => null);
-    window.location.href = '/?auth=signed-out';
+    window.location.href = '/play?auth=signed-out';
 }
 
 async function deleteAccount() {
@@ -748,7 +748,7 @@ async function deleteAccount() {
         return;
     }
 
-    window.location.href = '/?account=deleted';
+    window.location.href = '/play?account=deleted';
 }
 
 async function updateAccountPanel() {
@@ -886,6 +886,7 @@ function hideThanksPopup() {
 function handlePageMessages() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('checkout') === 'resume') resumeCheckoutRequested = true;
+    if (params.get('checkout') === 'plus') showAccessWall('plus');
     if (params.get('welcome') === 'signup') showThanksPopup('signup');
     if (params.get('welcome') === 'signin') showThanksPopup('signin');
     if (params.get('checkout') === 'success') {

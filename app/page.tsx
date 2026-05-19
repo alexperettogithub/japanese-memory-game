@@ -1,217 +1,243 @@
-import Script from 'next/script';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { LandingMenu } from './components/LandingMenu';
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'Japanese Memory Game - Learn Kana and Kanji by Playing',
+  description: 'Start learning Japanese hiragana, katakana, and kanji with a fast memory game built for short, focused recall practice.',
+  alternates: {
+    canonical: '/',
+  },
+};
+
+const steps = [
+  {
+    title: 'Explore first',
+    text: 'Flip cards without pressure. See the character, pronunciation, and meaning until the deck starts to feel familiar.',
+  },
+  {
+    title: 'Switch to Play mode',
+    text: 'Recall from memory instead of just recognizing. Type the answer, check it, and build a real retrieval habit.',
+  },
+  {
+    title: 'Follow the path',
+    text: 'Start with Hiragana, continue with Katakana, then move into Kanji Grade 1 and Grade 2 when kana feels comfortable.',
+  },
+  {
+    title: 'Keep your streak simple',
+    text: 'Use best score, solved cards, and best time as tiny signals. One clean round beats a long unfocused session.',
+  },
+];
+
+const quickWins = [
+  'Try 10 Hiragana cards in Explore mode.',
+  'Play one short recall round.',
+  'Search a character you keep missing.',
+  'Come back tomorrow and beat your best time.',
+];
+
+const characterSystems = [
+  {
+    name: 'Hiragana',
+    sample: 'あ',
+    text: 'The soft phonetic script used for native Japanese words, grammar endings, and beginner reading.',
+  },
+  {
+    name: 'Katakana',
+    sample: 'ア',
+    text: 'The angular phonetic script used for loanwords, names, emphasis, and many modern terms.',
+  },
+  {
+    name: 'Kanji',
+    sample: '水',
+    text: 'Meaning-rich characters used for words and concepts. One symbol can carry sound, meaning, and context.',
+  },
+];
+
+const usageShots = [
+  {
+    src: '/app-usage-explore.svg',
+    alt: 'Explore mode preview showing Japanese memory cards',
+    title: 'Explore cards first',
+    text: 'Tap a card and reveal pronunciation and meaning before you test yourself.',
+  },
+  {
+    src: '/app-usage-play.svg',
+    alt: 'Play mode preview showing a recall answer field and score',
+    title: 'Recall actively',
+    text: 'Switch to Play mode and type answers from memory, not from recognition alone.',
+  },
+  {
+    src: '/app-usage-progress.svg',
+    alt: 'Progress preview showing score, solved cards, and best time',
+    title: 'Keep tiny wins visible',
+    text: 'Watch solved cards, best score, and best time so practice feels concrete.',
+  },
+];
+
+export default function LandingPage() {
   return (
-    <>
+    <main className="welcome-page landing-page">
       <div className="beta-badge" aria-label="New beta version">New!<span>Beta version</span></div>
-      <nav className="site-menu" aria-label="Account and social links">
-        <input className="site-menu-state" id="site-menu-state" type="checkbox" aria-hidden="true" />
-        <label className="site-menu-toggle" id="site-menu-toggle" htmlFor="site-menu-state" aria-controls="site-menu-panel" aria-label="Open menu" role="button">
-          <span></span>
-          <span></span>
-          <span></span>
-        </label>
-        <label className="site-menu-backdrop" htmlFor="site-menu-state" aria-hidden="true"></label>
-        <div className="site-menu-panel" id="site-menu-panel">
-          <div className="site-menu-account">
-            <span className="account-kicker">Account</span>
-            <strong id="account-status">Checking session...</strong>
-            <p id="account-detail">Sign in or create a free account to save your access.</p>
-          </div>
-          <div className="account-actions" id="account-actions">
-            <a className="account-primary" id="account-signin" href="/login?mode=signin">Sign in</a>
-            <a className="account-secondary" id="account-signup" href="/login?mode=signup">Sign up</a>
-            <button className="account-primary" id="account-subscribe" type="button">Subscribe</button>
-            <button className="account-secondary" id="account-portal" type="button" hidden>Manage Plus</button>
-            <button className="account-secondary" id="account-signout" type="button" hidden>Sign out</button>
-            <button className="account-danger" id="account-delete" type="button" hidden>Delete account</button>
-          </div>
-          <div className="social-links" aria-label="Social links coming soon">
-            <button type="button" aria-label="X profile coming soon" data-social="X" data-coming-soon="true">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2h3.4l-7.5 8.6L23.6 22h-6.9l-5.4-7.1L5.1 22H1.7l8-9.2L1.2 2h7.1l4.9 6.5L18.9 2Zm-1.2 18h1.9L7.2 3.9h-2L17.7 20Z" /></svg>
-            </button>
-            <button type="button" aria-label="Instagram profile coming soon" data-social="Instagram" data-coming-soon="true">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm4.2 3.3A4.7 4.7 0 1 1 7.3 12 4.7 4.7 0 0 1 12 7.3Zm0 2A2.7 2.7 0 1 0 14.7 12 2.7 2.7 0 0 0 12 9.3Zm5-2.7a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 17 6.6Z" /></svg>
-            </button>
-            <a href="https://github.com/alexperettogithub/japanese-memory-game" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 8.4 22.9c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.2 1.9 1.2 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9A4.6 4.6 0 0 1 6 7.8a4.3 4.3 0 0 1 .1-3.1s1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2a4.3 4.3 0 0 1 .1 3.1 4.6 4.6 0 0 1 1.2 3.2c0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.2.9 2.4v3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5Z" /></svg>
-            </a>
-          </div>
-          <p className="social-feedback" id="social-feedback" aria-live="polite"></p>
-          <section className="app-coming-soon" aria-label="Mobile apps coming soon">
-            <span className="account-kicker">Mobile apps</span>
-            <p>Coming soon to the App Store and Play Store.</p>
-            <div className="app-store-icons" aria-hidden="true">
-              <span className="store-badge app-store-badge">
-                <svg viewBox="0 0 135 40"><rect width="135" height="40" rx="7" fill="#000"/><path fill="#fff" d="M30.3 20.8c0-3.2 2.6-4.7 2.7-4.8-1.5-2.2-3.8-2.5-4.6-2.5-2-.2-3.8 1.1-4.8 1.1s-2.5-1.1-4.1-1.1c-2.1 0-4.1 1.2-5.1 3.1-2.2 3.7-.6 9.2 1.5 12.3 1 1.5 2.3 3.1 3.9 3 1.6-.1 2.2-1 4.1-1s2.5 1 4.1 1 2.7-1.5 3.7-3c1.2-1.7 1.7-3.4 1.7-3.5-.1 0-3.1-1.2-3.1-4.6ZM27.1 11.4c.9-1 1.5-2.4 1.3-3.8-1.3.1-2.8.9-3.7 1.9-.8.9-1.5 2.3-1.3 3.7 1.4.1 2.8-.7 3.7-1.8Z"/><text x="43" y="14" fill="#fff" fontFamily="Arial, sans-serif" fontSize="7">Download on the</text><text x="43" y="29" fill="#fff" fontFamily="Arial, sans-serif" fontSize="17" fontWeight="700">App Store</text></svg>
-              </span>
-              <span className="store-badge play-store-badge">
-                <svg viewBox="0 0 135 40"><rect width="135" height="40" rx="7" fill="#000"/><path fill="#00f0ff" d="m17 8 12.4 12L17 32c-.5-.4-.8-1-.8-1.8V9.8c0-.8.3-1.4.8-1.8Z"/><path fill="#00d084" d="m18.3 7.2 15.4 8.7-4.3 4.1L18.3 7.2Z"/><path fill="#ffc400" d="m33.7 24.1-15.4 8.7L29.4 20l4.3 4.1Z"/><path fill="#ff3b30" d="m33.7 15.9 5 2.8c1 .6 1 2 0 2.6l-5 2.8-4.3-4.1 4.3-4.1Z"/><text x="47" y="14" fill="#fff" fontFamily="Arial, sans-serif" fontSize="7">GET IT ON</text><text x="47" y="29" fill="#fff" fontFamily="Arial, sans-serif" fontSize="14" fontWeight="700">Google Play</text></svg>
-              </span>
+      <LandingMenu />
+      <section className="landing-hero" aria-labelledby="welcome-title">
+        <div className="landing-hero-inner">
+          <header className="landing-hero-copy">
+            <span className="card-label">Free Japanese memory trainer</span>
+            <img className="site-logo landing-logo" src="/logo.svg" alt="Japanese Memory Game logo" />
+            <h1 id="welcome-title">Japanese Memory Game</h1>
+            <p className="hero-copy">Explore kana and kanji cards, then switch into short recall rounds that turn recognition into memory.</p>
+            <div className="hero-actions" aria-label="Primary actions">
+              <Link className="hero-action-primary" href="/play">Start playing</Link>
+              <Link className="hero-action-secondary" href="#how-it-works">How it works</Link>
             </div>
-          </section>
-        </div>
-      </nav>
-      <div className="time-counter" id="play-time-counter" hidden aria-label="Play time">
-        <span>Time</span>
-        <strong id="time-value">00:00</strong>
-      </div>
-      <div className="access-wall" id="access-wall" hidden role="dialog" aria-modal="true" aria-labelledby="access-wall-title">
-        <div className="access-wall-card">
-          <button className="access-wall-dismiss" id="access-wall-dismiss" type="button" aria-label="Close dialog">×</button>
-          <span className="card-label" id="access-wall-label">Keep learning</span>
-          <h2 id="access-wall-title">Sign in to continue</h2>
-          <p id="access-wall-copy">Sign in if you already have an account, or create a free account to keep playing with no limits in Explore Mode.</p>
-          <div className="access-wall-actions access-wall-auth-actions" id="auth-actions">
-            <a className="access-wall-primary" href="/login?mode=signin">Sign in</a>
-            <a className="access-wall-secondary" href="/login?mode=signup">Sign up (free)</a>
-            <button className="access-wall-secondary" id="access-wall-close" type="button">Not now</button>
-          </div>
-          <div className="access-wall-actions" id="plus-actions" hidden>
-            <p className="checkout-legal-summary">Plus renews automatically until cancelled. Applicable taxes and the final amount payable are shown in Stripe Checkout before payment confirmation.</p>
-            <label className="checkout-consent"><input id="checkout-terms-consent" type="checkbox" /><span>I accept the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>, <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and <a href="/refunds" target="_blank" rel="noopener noreferrer">Refunds and Withdrawal Policy</a>.</span></label>
-            <label className="checkout-consent"><input id="checkout-immediate-access-consent" type="checkbox" /><span>I request immediate Plus access and acknowledge the withdrawal information for digital services/content.</span></label>
-            <button className="access-wall-primary" id="checkout-yearly" type="button">Subscribe and pay €30/year</button>
-            <button className="access-wall-secondary" id="checkout-monthly" type="button">Subscribe and pay €5/month</button>
-            <button className="access-wall-secondary" id="plus-wall-close" type="button">Not now</button>
-          </div>
-          <p className="access-wall-feedback" id="checkout-feedback" aria-live="polite"></p>
-        </div>
-      </div>
-      <div className="thanks-popup" id="thanks-popup" hidden role="dialog" aria-modal="true" aria-labelledby="thanks-title">
-        <div className="thanks-card">
-          <span className="card-label" id="thanks-label">Thank you</span>
-          <h2 id="thanks-title">Welcome aboard</h2>
-          <p id="thanks-copy">Thanks for signing up. Your free account is ready.</p>
-          <button className="access-wall-primary" id="thanks-close" type="button">Continue learning</button>
-        </div>
-      </div>
-      <div className="page-container">
-        <div className="container">
-          <header className="hero">
-            <img className="site-logo" src="/logo.svg" alt="Japanese Memory Game logo" />
-            <h1>Japanese Memory Game</h1>
-            <p className="hero-copy">Explore cards, play recall rounds, and build Japanese memory one tiny win at a time.</p>
+            <div className="landing-proof-row" aria-label="Practice highlights">
+              <span>No account needed to try</span>
+              <span>No ads</span>
+              <span>Free software</span>
+            </div>
           </header>
-          <section className="controls-panel" aria-label="Game controls">
-            <div className="app-mode-switch explore-selected" aria-label="App mode">
-              <button className="mode-btn active" data-app-mode="explore">Explore mode</button>
-              <button className="mode-btn" data-app-mode="play">Play mode</button>
+          <aside className="landing-preview-card" aria-label="Practice preview">
+            <div className="preview-topline">
+              <span>Explore mode</span>
+              <strong>Hiragana</strong>
             </div>
-            <button className="controls-toggle" id="controls-toggle" type="button" aria-expanded="false" aria-controls="advanced-controls">
-              <span aria-hidden="true">☰</span>
-              Controls
-            </button>
-            <div className="advanced-controls" id="advanced-controls">
-              <div className="navigation" aria-label="Study mode">
-                <button className="nav-btn active" data-mode="hiragana">Hiragana</button>
-                <button className="nav-btn" data-mode="katakana">Katakana</button>
-                <button className="nav-btn" data-mode="kanji">Kanji</button>
-                <button className="nav-btn shuffle-btn" id="shuffle-btn">Shuffle</button>
-              </div>
-              <div className="search-wrap">
-                <label htmlFor="search-input">Search cards</label>
-                <div className="search-box">
-                  <input id="search-input" type="search" placeholder="Try ka, か, カ, 水, みず, or water" autoComplete="off" />
-                  <button className="clear-search-btn" id="clear-search-btn" type="button" aria-label="Clear search">Clear</button>
-                </div>
-                <p className="search-hint">Search globally by Japanese, romaji, or English meaning.</p>
-              </div>
-              <div className="score-panel" id="score-panel" hidden>
-                <div className="play-kind-switch" aria-label="Play type">
-                  <button className="play-kind-btn active" data-play-kind="pronunciation" type="button">Pronunciation</button>
-                  <button className="play-kind-btn" data-play-kind="meaning" type="button">Meaning</button>
-                </div>
-                <div>
-                  <span className="score-label">Score</span>
-                  <strong id="score-value">0</strong>
-                </div>
-                <div>
-                  <span className="score-label">Solved</span>
-                  <strong id="progress-value">0/0</strong>
-                </div>
-                <div>
-                  <span className="score-label">Best</span>
-                  <strong id="best-score-value">0</strong>
-                </div>
-                <div>
-                  <span className="score-label">Best time</span>
-                  <strong id="best-time-value">--:--</strong>
-                </div>
-                <div>
-                  <span className="score-label">Last run</span>
-                  <strong id="last-time-value">--:--</strong>
-                </div>
-                <div>
-                  <span className="score-label">Total</span>
-                  <strong id="total-score-value">0</strong>
-                </div>
-                <p id="play-instructions">Click a card, type the answer, then submit.</p>
-              </div>
-              <div className="grade-selection" style={{ display: 'none' }} aria-label="Kanji grade">
-                <button className="grade-btn active" data-grade="1">Grade 1 (80)</button>
-                <button className="grade-btn" data-grade="2">Grade 2 (160)</button>
-                <button className="grade-btn" data-grade="3">Grade 3 (200)</button>
-                <button className="grade-btn" data-grade="4">Grade 4 (202)</button>
-                <button className="grade-btn" data-grade="5">Grade 5 (193)</button>
-                <button className="grade-btn" data-grade="6">Grade 6 (191)</button>
-              </div>
+            <div className="preview-card-stack" aria-hidden="true">
+              <span>あ</span>
+              <span>ア</span>
+              <span>水</span>
             </div>
-          </section>
-          <div className="game-container">
-            <p className="results-summary" id="results-summary" aria-live="polite"></p>
-            <div className="cards-grid" id="cardsGrid"></div>
-            <section className="bonus-level" id="bonus-level" hidden aria-live="polite">
-              <div className="bonus-copy">
-                <span className="card-label">Secret level unlocked</span>
-                <h2>Final challenge</h2>
-                <p>You cleared the round. Now try the legendary 84-stroke kanji.</p>
-              </div>
-              <div className="bonus-card">
-                <img className="taito-kanji" src="/taito-1.svg" alt="Final challenge kanji" />
-                <label htmlFor="taito-answer">Answer in hiragana</label>
-                <div className="answer-row">
-                  <input id="taito-answer" type="text" inputMode="text" autoComplete="off" placeholder="たいと" />
-                  <button id="taito-submit" type="button">Check</button>
-                </div>
-                <p className="answer-feedback" id="taito-feedback"></p>
-              </div>
-            </section>
-            <section className="leaderboard-publish" id="leaderboard-publish" hidden aria-live="polite">
-              <div>
-                <span className="card-label">Optional leaderboard</span>
-                <h2>Share this run?</h2>
-                <p>Publish your result with a public nickname. Your email is never shown, and you can remove your leaderboard entries anytime.</p>
-              </div>
-              <div className="leaderboard-publish-form">
-                <label htmlFor="leaderboard-name">Public nickname</label>
-                <input id="leaderboard-name" type="text" maxLength={24} autoComplete="nickname" placeholder="Memory learner" />
-                <label className="checkout-consent leaderboard-consent"><input id="leaderboard-consent" type="checkbox" /><span>I choose to publish this result publicly and understand that my nickname, score, solved cards, mode, grade, and time will be visible on the leaderboard.</span></label>
-                <div className="leaderboard-publish-actions">
-                  <button className="access-wall-primary" id="leaderboard-submit" type="button">Publish result</button>
-                  <button className="access-wall-secondary" id="leaderboard-remove" type="button">Remove my entries</button>
-                  <a className="access-wall-secondary" href="/leaderboard">View leaderboard</a>
-                </div>
-                <p className="answer-feedback" id="leaderboard-feedback"></p>
-              </div>
-            </section>
-          </div>
+            <p>Flip a card, say the answer, then test recall when you are ready.</p>
+          </aside>
         </div>
-        <footer>
-          <p>Copyleft <span className="rotated">©</span> <span id="current-year">2026</span> <a href="https://www.zerosoftworks.it" target="_blank" rel="noopener noreferrer">Zero Softworks</a></p>
-          <nav className="legal-footer-links" aria-label="Legal links">
-            <a href="/legal">Legal Notice</a>
-            <a href="/terms">Terms</a>
-            <a href="/privacy">Privacy</a>
-            <a href="/cookies">Cookies</a>
-            <a href="/refunds">Refunds</a>
-            <a href="/free-culture">Free Culture</a>
-            <a href="/leaderboard">Leaderboard</a>
-          </nav>
-        </footer>
-      </div>
-      <Script src="/kanji-data.js" strategy="beforeInteractive" />
-      <Script src="/script.js" strategy="afterInteractive" />
-    </>
+      </section>
+
+      <section className="welcome-trust-strip" aria-label="Why try it">
+        <div><strong>No account needed to try</strong><span>Start with anonymous Explore and Play limits.</span></div>
+        <div><strong>No ads or tracking pixels</strong><span>Privacy-friendly aggregate analytics only.</span></div>
+        <div><strong>Free software</strong><span>GPL code and open educational licensing.</span></div>
+      </section>
+
+      <section className="welcome-section character-section" aria-labelledby="characters-title">
+        <div className="welcome-section-intro">
+          <span className="card-label">Japanese writing</span>
+          <h2 id="characters-title">Japanese uses characters in three different ways.</h2>
+          <p>Learning Japanese is not just memorizing an alphabet. You meet two phonetic scripts plus kanji, a system of meaning-bearing characters. The app exists because that mix is easier to learn when each symbol becomes an action, not a static table.</p>
+        </div>
+        <div className="character-grid">
+          {characterSystems.map((system) => (
+            <article className="character-card" key={system.name}>
+              <strong>{system.sample}</strong>
+              <h3>{system.name}</h3>
+              <p>{system.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="welcome-section purpose-section" aria-labelledby="purpose-title">
+        <div>
+          <span className="card-label">Why this app exists</span>
+          <h2 id="purpose-title">Because recognition is not the same as memory.</h2>
+        </div>
+        <p>Most beginners see giant kana charts and kanji lists, understand them for a moment, then lose them later. Japanese Memory Game is built around retrieval practice: short rounds, immediate feedback, and repeated recall. The goal is to help learners cross the first wall without ads, dark patterns, or noisy lessons.</p>
+      </section>
+
+      <section className="welcome-section usage-section" aria-labelledby="usage-title">
+        <div className="welcome-section-intro">
+          <span className="card-label">Inside the app</span>
+          <h2 id="usage-title">What practice looks like.</h2>
+          <p>Start by browsing, then ask your memory to work. The interface stays deliberately simple so the card, answer, and next tiny win stay in focus.</p>
+        </div>
+        <div className="usage-shot-grid">
+          {usageShots.map((shot) => (
+            <figure className="usage-shot" key={shot.src}>
+              <img src={shot.src} alt={shot.alt} />
+              <figcaption>
+                <strong>{shot.title}</strong>
+                <span>{shot.text}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section className="welcome-section welcome-flow" id="how-it-works" aria-labelledby="flow-title">
+        <div className="welcome-section-intro">
+          <span className="card-label">How it works</span>
+          <h2 id="flow-title">One loop, four moves.</h2>
+          <p>The app is intentionally small. Less setup means fewer exits before the first useful memory rep.</p>
+        </div>
+        <div className="welcome-step-grid">
+          {steps.map((step, index) => (
+            <article className="welcome-step" key={step.title}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="welcome-section welcome-split" aria-labelledby="first-session-title">
+        <div>
+          <span className="card-label">Your first session</span>
+          <h2 id="first-session-title">Do this before you leave.</h2>
+          <p>Most people bounce because the next action is unclear. This is the shortest useful path: get one small win, then decide whether to go deeper.</p>
+        </div>
+        <ol className="welcome-checklist">
+          {quickWins.map((win) => <li key={win}>{win}</li>)}
+        </ol>
+      </section>
+
+      <section className="welcome-section welcome-access" aria-labelledby="access-title">
+        <div className="welcome-section-intro">
+          <span className="card-label">Access</span>
+          <h2 id="access-title">Free learning first. Plus when you want the full kanji path.</h2>
+        </div>
+        <div className="welcome-plan-grid">
+          <article className="welcome-plan-card">
+            <span className="card-label">Free</span>
+            <h3>Build the foundation</h3>
+            <ul>
+              <li>Hiragana and Katakana</li>
+              <li>Kanji Grade 1 and Grade 2</li>
+              <li>Free account removes anonymous limits on free content</li>
+            </ul>
+            <Link className="access-wall-secondary" href="/login?mode=signup">Start free</Link>
+          </article>
+          <article className="welcome-plan-card featured-plan">
+            <span className="card-label">Plus</span>
+            <h3>Unlock advanced kanji</h3>
+            <ul>
+              <li>Kanji Grade 3 through Grade 6</li>
+              <li>Future advanced content as it ships</li>
+              <li>Supports hosting, maintenance, and free-software development</li>
+            </ul>
+            <Link className="access-wall-primary" href="/play?checkout=plus">Get Plus</Link>
+          </article>
+        </div>
+      </section>
+
+      <section className="welcome-section welcome-final-cta" aria-labelledby="final-cta-title">
+        <span className="card-label">Ready</span>
+        <h2 id="final-cta-title">Give it one round.</h2>
+        <p>If the first three minutes feel useful, save your access with a free account. If you are already serious about kanji, Plus is there when you need the advanced grades.</p>
+        <div className="welcome-actions" aria-label="Final actions">
+          <Link className="access-wall-primary" href="/play">Play now</Link>
+          <Link className="access-wall-secondary" href="/leaderboard">See the leaderboard</Link>
+        </div>
+      </section>
+
+      <footer className="welcome-footer">
+        <p>Built by <a href="https://www.zerosoftworks.it" target="_blank" rel="noopener noreferrer">Zero Softworks</a>.</p>
+        <nav aria-label="Legal and project links">
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
+          <Link href="/free-culture">Free Culture</Link>
+          <a href="https://github.com/alexperettogithub/japanese-memory-game" target="_blank" rel="noopener noreferrer">Source code</a>
+        </nav>
+      </footer>
+    </main>
   );
 }
