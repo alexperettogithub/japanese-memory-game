@@ -9,7 +9,7 @@ const links = [
 
 export function LandingMenu() {
   return (
-    <nav className="site-menu landing-menu" aria-label="Landing links">
+    <nav className="site-menu" aria-label="Landing links">
       <input className="site-menu-state" id="site-menu-state" type="checkbox" aria-hidden="true" />
       <label className="site-menu-toggle" id="site-menu-toggle" htmlFor="site-menu-state" aria-controls="site-menu-panel" aria-label="Open menu" role="button">
         <span></span>

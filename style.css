@@ -392,10 +392,6 @@ h1 {
     color: var(--pink);
 }
 
-.landing-menu .account-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .social-links {
     display: flex;
     gap: 0.55rem;
@@ -1676,123 +1672,14 @@ footer a {
 }
 
 .landing-hero {
-    width: min(1180px, calc(100% - 2rem));
-    margin: clamp(1.25rem, 3vw, 2.4rem) auto 0.85rem;
-    padding: clamp(1rem, 2.4vw, 1.55rem);
-    border: 2px solid rgba(255, 255, 255, 0.76);
-    border-radius: 34px;
-    background:
-        radial-gradient(circle at 0% 0%, rgba(255, 79, 163, 0.14), transparent 34%),
-        radial-gradient(circle at 100% 10%, rgba(35, 215, 199, 0.16), transparent 30%),
-        rgba(255, 255, 255, 0.66);
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(18px);
-}
-
-.landing-hero-inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
-    gap: clamp(1rem, 3vw, 2rem);
-    align-items: center;
-}
-
-.landing-hero-copy {
-    display: grid;
-    justify-items: start;
-}
-
-.landing-logo {
-    width: clamp(64px, 8vw, 94px);
-    margin: 0.75rem 0 0.9rem;
-}
-
-.landing-hero h1 {
-    max-width: 900px;
-    margin-bottom: 0.65rem;
-    font-size: clamp(3.2rem, 8vw, 6.4rem);
-}
-
-.landing-hero .hero-copy {
-    max-width: 740px;
+    width: 100%;
     margin: 0;
+    padding: clamp(5.2rem, 9vw, 7rem) clamp(1rem, 3vw, 2.5rem) clamp(1rem, 3vw, 1.75rem);
 }
 
-.landing-hero .hero-actions {
-    justify-content: start;
-    margin-top: 1rem;
-}
-
-.landing-proof-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.48rem;
-    margin-top: 0.85rem;
-}
-
-.landing-proof-row span {
-    padding: 0.42rem 0.62rem;
-    border: 1px solid rgba(32, 19, 53, 0.08);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
-    color: var(--muted);
-    font-size: 0.82rem;
-    font-weight: 900;
-}
-
-.landing-preview-card {
-    display: grid;
-    gap: 0.9rem;
-    padding: 1rem;
-    border: 2px solid rgba(255, 255, 255, 0.82);
-    border-radius: 28px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 240, 201, 0.74));
-    box-shadow: var(--soft-shadow);
-}
-
-.preview-topline {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.75rem;
-    color: var(--muted);
-    font-size: 0.82rem;
-    font-weight: 950;
-    text-transform: uppercase;
-}
-
-.preview-topline strong {
-    color: var(--violet);
-}
-
-.preview-card-stack {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.6rem;
-}
-
-.preview-card-stack span {
-    display: grid;
-    min-height: 112px;
-    place-items: center;
-    border: 3px solid rgba(255, 255, 255, 0.86);
-    border-radius: 24px;
-    background: linear-gradient(145deg, #fff, #fff0c9);
-    color: var(--ink);
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
-    font-weight: 950;
-    box-shadow: 0 14px 28px rgba(32, 19, 53, 0.1);
-}
-
-.preview-card-stack span:nth-child(2) {
-    background: linear-gradient(145deg, #fff, #dcfbff);
-}
-
-.preview-card-stack span:nth-child(3) {
-    background: linear-gradient(145deg, #fff9d8, #ffe1a8);
-}
-
-.landing-preview-card p {
-    color: var(--muted);
-    font-weight: 800;
+.landing-hero-content {
+    margin-bottom: 0;
+    padding: 0;
 }
 
 .landing-hero + .welcome-trust-strip {
@@ -2485,27 +2372,12 @@ footer a {
     }
 
     .landing-hero {
-        margin-top: 6rem;
-        padding: 0.9rem;
-        border-radius: 28px;
+        padding-top: 6.2rem;
     }
 
-    .landing-hero-inner,
     .game-toolbar,
     .game-toolbar-copy {
         display: grid;
-    }
-
-    .landing-hero h1 {
-        font-size: clamp(2.65rem, 16vw, 4.5rem);
-    }
-
-    .landing-hero .hero-actions {
-        width: 100%;
-    }
-
-    .landing-preview-card {
-        display: none;
     }
 
     .app-container {

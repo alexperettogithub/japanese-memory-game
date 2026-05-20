@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 import { LandingMenu } from './components/LandingMenu';
 
 export const metadata: Metadata = {
@@ -81,35 +82,15 @@ export default function LandingPage() {
       <div className="beta-badge" aria-label="New beta version">New!<span>Beta version</span></div>
       <LandingMenu />
       <section className="landing-hero" aria-labelledby="welcome-title">
-        <div className="landing-hero-inner">
-          <header className="landing-hero-copy">
-            <span className="card-label">Free Japanese memory trainer</span>
-            <img className="site-logo landing-logo" src="/logo.svg" alt="Japanese Memory Game logo" />
-            <h1 id="welcome-title">Japanese Memory Game</h1>
-            <p className="hero-copy">Explore kana and kanji cards, then switch into short recall rounds that turn recognition into memory.</p>
-            <div className="hero-actions" aria-label="Primary actions">
-              <Link className="hero-action-primary" href="/play">Start playing</Link>
-              <Link className="hero-action-secondary" href="#how-it-works">How it works</Link>
-            </div>
-            <div className="landing-proof-row" aria-label="Practice highlights">
-              <span>No account needed to try</span>
-              <span>No ads</span>
-              <span>Free software</span>
-            </div>
-          </header>
-          <aside className="landing-preview-card" aria-label="Practice preview">
-            <div className="preview-topline">
-              <span>Explore mode</span>
-              <strong>Hiragana</strong>
-            </div>
-            <div className="preview-card-stack" aria-hidden="true">
-              <span>あ</span>
-              <span>ア</span>
-              <span>水</span>
-            </div>
-            <p>Flip a card, say the answer, then test recall when you are ready.</p>
-          </aside>
-        </div>
+        <header className="hero landing-hero-content">
+          <img className="site-logo" src="/logo.svg" alt="Japanese Memory Game logo" />
+          <h1 id="welcome-title">Japanese Memory Game</h1>
+          <p className="hero-copy">Explore cards, play recall rounds, and build Japanese memory one tiny win at a time.</p>
+          <div className="hero-actions" aria-label="Primary actions">
+            <Link className="hero-action-primary" href="/play">Start playing</Link>
+            <Link className="hero-action-secondary" href="#how-it-works">How it works</Link>
+          </div>
+        </header>
       </section>
 
       <section className="welcome-trust-strip" aria-label="Why try it">
@@ -238,6 +219,44 @@ export default function LandingPage() {
           <a href="https://github.com/alexperettogithub/japanese-memory-game" target="_blank" rel="noopener noreferrer">Source code</a>
         </nav>
       </footer>
+      <Script id="landing-floating-controls" strategy="afterInteractive">{`
+        (() => {
+          const getScrollOffset = () => Math.max(
+            window.scrollY || 0,
+            window.pageYOffset || 0,
+            document.scrollingElement?.scrollTop || 0,
+            document.documentElement.scrollTop || 0,
+            document.body.scrollTop || 0,
+            window.visualViewport?.pageTop || 0,
+            window.visualViewport?.offsetTop || 0
+          );
+          const updateFloatingHeader = () => {
+            const betaBadge = document.querySelector('.beta-badge');
+            const scrolled = getScrollOffset() > 24;
+            document.documentElement.classList.toggle('floating-header-raised', scrolled);
+            if (betaBadge) betaBadge.classList.toggle('hidden', scrolled);
+          };
+          const setSiteMenuOpen = (open) => {
+            const state = document.querySelector('#site-menu-state');
+            if (state) state.checked = open;
+          };
+          updateFloatingHeader();
+          window.addEventListener('scroll', updateFloatingHeader, { passive: true });
+          document.addEventListener('scroll', updateFloatingHeader, { passive: true, capture: true });
+          window.addEventListener('touchmove', updateFloatingHeader, { passive: true });
+          window.visualViewport?.addEventListener('scroll', updateFloatingHeader, { passive: true });
+          window.visualViewport?.addEventListener('resize', updateFloatingHeader, { passive: true });
+          document.addEventListener('pointerdown', (event) => {
+            const menu = document.querySelector('.site-menu');
+            const state = document.querySelector('#site-menu-state');
+            if (!state?.checked || menu?.contains(event.target)) return;
+            setSiteMenuOpen(false);
+          });
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') setSiteMenuOpen(false);
+          });
+        })();
+      `}</Script>
     </main>
   );
 }
