@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { PageNav } from '../components/PageNav';
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
@@ -66,7 +67,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <button type="submit">{isSignUp ? 'Sign up with email' : 'Sign in with email'}</button>
         </form>
         <p className="auth-note">{isSignUp ? 'Already have an account? Use Sign in instead.' : "Forgot your password? You don't need one here: use Sign in and we will email you a fresh magic link."}</p>
-        <a href="/play">Back to the game</a>
+        <Link href="/">Back to the game</Link>
       </section>
     </main>
   );

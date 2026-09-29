@@ -5,6 +5,7 @@ node_modules/
 *.log
 .env
 .env.*
+prod.env
 !.env.example
 !.env.local.example
 !.env.operator.example

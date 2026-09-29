@@ -1,5 +1,6 @@
 .env
 .env.*
+prod.env
 .env.operator
 .env.operator.example
 .env.local.example

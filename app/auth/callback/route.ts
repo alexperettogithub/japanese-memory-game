@@ -19,5 +19,5 @@ export async function GET(request: Request) {
     if (checkoutInterval === 'monthly' || checkoutInterval === 'yearly') params.set('interval', checkoutInterval);
   }
 
-  redirect(`/play?${params.toString()}`);
+  redirect(`/?${params.toString()}`);
 }

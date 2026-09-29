@@ -49,7 +49,7 @@ export default function TermsPage() {
       <section className="legal-card">
         <h2>Acceptable Use</h2>
         <p>Users must not misuse the service, attempt to bypass access controls, overload infrastructure, reverse engineer private service endpoints for abuse, upload malicious data, interfere with other users, or use the service unlawfully.</p>
-        <p>If a user chooses to publish leaderboard results, the public nickname must not impersonate others, include unlawful or abusive content, reveal another person's personal data, or violate third-party rights. Zero Softworks may remove leaderboard entries that appear abusive, unlawful, misleading, or technically invalid.</p>
+        <p>If a user chooses to publish leaderboard results, the public nickname must not impersonate others, include unlawful or abusive content, reveal another person&apos;s personal data, or violate third-party rights. Zero Softworks may remove leaderboard entries that appear abusive, unlawful, misleading, or technically invalid.</p>
       </section>
       <section className="legal-card">
         <h2>Availability and Changes</h2>
@@ -61,7 +61,7 @@ export default function TermsPage() {
       </section>
       <section className="legal-card">
         <h2>Governing Law</h2>
-        <p>These terms are governed by Italian law, without prejudice to mandatory consumer protections available under the law of the user's country of residence in the European Union.</p>
+        <p>These terms are governed by Italian law, without prejudice to mandatory consumer protections available under the law of the user&apos;s country of residence in the European Union.</p>
       </section>
     </main>
   );

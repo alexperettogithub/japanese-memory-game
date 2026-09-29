@@ -20,7 +20,7 @@ export default function CookiesPage() {
           <div><dt>jmg_anon_id</dt><dd>Technical first-party cookie used to enforce anonymous Explore and Play limits. Duration: up to 12 months.</dd></div>
           <div><dt>Supabase authentication cookies</dt><dd>Technical cookies used to keep signed-in users authenticated. Duration depends on authentication session settings.</dd></div>
           <div><dt>jmg_storage_notice</dt><dd>Technical first-party cookie used to remember that the storage notice was acknowledged. Duration: about 180 days.</dd></div>
-          <div><dt>jmg-score-stats</dt><dd>LocalStorage entry used to keep local score and progress statistics in the user's browser until deleted by the user/browser.</dd></div>
+          <div><dt>jmg-score-stats</dt><dd>LocalStorage entry used to keep local score and progress statistics in the user&apos;s browser until deleted by the user/browser.</dd></div>
           <div><dt>Umami analytics</dt><dd>Aggregate privacy-friendly analytics request sent to Umami Cloud. No advertising cookies are set by Japanese Memory Game for this purpose.</dd></div>
         </dl>
       </section>
